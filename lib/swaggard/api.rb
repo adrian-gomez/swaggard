@@ -30,16 +30,13 @@ module Swaggard
       if controller_class
         route = (routes[controller_class.controller_path] || {})[yard_object.name.to_s]
         if route
-          # parse_path("[#{route[:verb]}] #{route[:path]}")
           @http_method = route[:verb]
           @path = route[:path]
-
-          # path_params = @path.scan(/\{([^\}]+)\}/).flatten.reject { |value| value == "format_type" }
 
           route[:path_params].each do |path_param|
             @parameters << {
               "paramType"     => "path",
-              "name"          => path_param,
+              "name"          => path_param.to_s,
               "description"   => "Scope response to #{path_param}",
               "dataType"      => "string",
               "required"      => true,
@@ -58,11 +55,13 @@ module Swaggard
     end
 
     def operation
+      produces = Swaggard.configuration.api_formats.map { |format| "application/#{format}" }
+
       {
         "httpMethod"     => http_method,
         "nickname"       => path[1..-1].gsub(/[^a-zA-Z\d:]/, '-').squeeze("-") + http_method.downcase,
         "responseClass"  => response_class || "void",
-        "produces"       => Swaggard.api_formats.map { |format| "application/#{format}" },
+        "produces"       => produces,
         "parameters"     => parameters,
         "summary"        => summary || description,
         "description"    => '111111',
@@ -156,8 +155,8 @@ module Swaggard
     end
 
     def add_format_parameters
-      formats = Swaggard.api_formats.map(&:upcase).to_sentence(two_words_connector: ' or ',
-                                                               last_word_connector: ', or ')
+      formats = Swaggard.configuration.api_formats.map(&:upcase)
+      formats = formats.to_sentence(two_words_connector: ' or ', last_word_connector: ', or ')
 
       description = "Response format either: #{formats}"
       @add_format_parameters ||= {
@@ -167,7 +166,7 @@ module Swaggard
         "dataType"        => "string",
         "required"        => true,
         "allowMultiple"   => false,
-        "allowableValues" => { "valueType" => "LIST", "values" => Swaggard.api_formats }
+        "allowableValues" => { "valueType" => "LIST", "values" => Swaggard.configuration.api_formats }
       }
     end
   end

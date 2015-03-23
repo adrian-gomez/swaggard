@@ -39,9 +39,9 @@ module Swaggard
 
     def to_h
       {
-        "apiVersion"     => Swaggard.api_version,
-        "swaggerVersion" => Swaggard.swagger_version,
-        "basePath"       => Swaggard.api_base_path,
+        "apiVersion"     => Swaggard.configuration.api_version,
+        "swaggerVersion" => Swaggard.configuration.swagger_version,
+        "basePath"       => Swaggard.configuration.api_base_path,
         "resource_path"  => @resource_path,
         "apis"           => @apis.values,
         "models"         => Hash[@models.map {|m| [m.id, m.to_h]}]

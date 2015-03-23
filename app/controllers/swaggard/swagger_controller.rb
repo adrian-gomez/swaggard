@@ -11,7 +11,7 @@ module Swaggard
 
     def show
       swagger_api = Swaggard.get_api("/#{params[:resource].gsub('-', '/')}")
-      swagger_api.merge!("basePath" => request.base_url + Swaggard.api_path) if swagger_api["basePath"].blank?
+      swagger_api.merge!("basePath" => request.base_url + Swaggard.configuration.api_path) if swagger_api["basePath"].blank?
       render :json => swagger_api
     end
 

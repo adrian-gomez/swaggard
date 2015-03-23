@@ -12,9 +12,9 @@ module Swaggard
 
     def to_h
       { 
-        "apiVersion"     => Swaggard.api_version,
-        "swaggerVersion" => Swaggard.swagger_version,
-        "basePath"       => Swaggard.doc_base_path,
+        "apiVersion"     => Swaggard.configuration.api_version,
+        "swaggerVersion" => Swaggard.configuration.swagger_version,
+        "basePath"       => Swaggard.configuration.doc_base_path,
         "apis"           => list_api
       }
     end
