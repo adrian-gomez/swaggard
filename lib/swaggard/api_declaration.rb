@@ -1,13 +1,13 @@
 module Swaggard
   class ApiDeclaration
 
-    attr_accessor :description, :resource_path
+    attr_accessor :description, :resource_path, :file_path
 
     attr_accessor :klass
 
-    def initialize
+    def initialize(models)
       @apis   = {}
-      @models = []
+      @models = models
     end
 
     def add_listing_info(yard_object)
@@ -16,8 +16,9 @@ module Swaggard
       end
 
       @klass = "#{yard_object.namespace}::#{yard_object.name}".constantize
-      @description = "#{yard_object.namespace}::#{yard_object.name}"
-      @resource_path = "/#{@klass.controller_path}"
+      @description = yard_object.docstring || ''
+      @file_path = "/#{@klass.controller_path}"
+      @resource_path =  '/'+ "#{@klass.controller_path}".gsub('/', '-')
 
       @resource_path.present?
     end
@@ -43,28 +44,7 @@ module Swaggard
         "basePath"       => Swaggard.api_base_path,
         "resource_path"  => @resource_path,
         "apis"           => @apis.values,
-        # "models"         => Hash[@models.map {|m| [m.id, m.to_h]}]
-        "models"         => {
-          "controllers.Ping"=> {
-            "id"=> "controllers.Ping",
-            "properties"=> {
-              "status "=> {
-                "type"=> "string"
-              },
-              "timestamp "=> {
-                "type"=> "int64"
-              },
-              "version "=> {
-                "type"=> "string"
-              }
-            },
-            "required"=> [
-              "status ",
-              "timestamp ",
-              "version "
-            ]
-          }
-        }
+        "models"         => Hash[@models.map {|m| [m.id, m.to_h]}]
       }
     end
 

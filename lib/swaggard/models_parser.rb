@@ -15,9 +15,6 @@ module Swaggard
       model = nil
       yard_objects.each do |yard_object|
         if yard_object.type == :class
-          p yard_object
-          p yard_object.tags
-
           model = Model.new(yard_object)
 
           yard_object.tags.each do |tag|

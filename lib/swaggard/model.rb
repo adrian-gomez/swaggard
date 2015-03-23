@@ -12,14 +12,20 @@ module Swaggard
       @properties << property
     end
 
+    def id
+      @model_name
+    end
+
     def attributes_model_names
       @properties.map(&:model_name).compact
     end
 
     def to_h
       {
-        "id" => @model_name,
-        "properties" => Hash[@properties.map {|property| [property.name, property.to_h]}]
+        "id"=> @model_name,
+        "description" => '111111',
+        "properties" => Hash[@properties.map {|property| [property.property_name, property.to_h]}],
+        "required"=> []
       }
     end
 

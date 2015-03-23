@@ -10,8 +10,8 @@ module Swaggard
       @listing = ResourceListing.new
     end
 
-    def run(yard_objects, routes)
-      api_declaration = ApiDeclaration.new
+    def run(yard_objects, routes, models)
+      api_declaration = ApiDeclaration.new(models)
       retain_api = false
 
       yard_objects.each do |yard_object|

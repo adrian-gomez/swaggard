@@ -2,8 +2,8 @@ Swaggard
 ========
 
 Swaggard is a Rails Engine that can be used to document a REST api. It does this by generating a
-json that is compliant with [Swagger][http://swagger.io] and displaying it using [Swagger-ui](https://github.com/wordnik/swagger-ui).
-This gem is inspired and based on [SwaggerYard][https://github.com/synctv/swagger_yard] by [Chris Trinh][https://github.com/chtrinh]. 
+json that is compliant with [Swagger](http://swagger.io) and displaying it using [Swagger-ui](https://github.com/wordnik/swagger-ui).
+This gem is inspired and based on [SwaggerYard](https://github.com/synctv/swagger_yard) by [Chris Trinh](https://github.com/chtrinh). 
  
  
 Swaggard vs SwaggerYard
@@ -77,31 +77,22 @@ Here is a example of how to use Swaggard
 
 ![Web UI](https://raw.github.com/synctv/swagger_yard/master/example/web-ui.png)
 
-
-Notes
------
-
-By default Swaggard will use a slightly modify version of the swagger-ui.
-Changes to the JS code are indicated with "Swaggard changes" comments. The changes are mainly to
-support Rails way of supporting an array of parameters.
-
-
 More Information
 -----------------
 
-[Swagger][http://swagger.io]
-[Swagger-ui](https://github.com/wordnik/swagger-ui)
-[Yard](https://github.com/lsegal/yard)
+- [Swagger](http://swagger.io)
+- [Swagger-ui](https://github.com/wordnik/swagger-ui)
+- [Yard](https://github.com/lsegal/yard)
 
 
 Author
 ------
 
-[Adrian Gomez][https://github.com/adrian-gomez]
+[Adrian Gomez](https://github.com/adrian-gomez)
 
 
 Credits
 -------
 
-[Chris Trinh][https://github.com/chtrinh] author of [SwaggerYard][https://github.com/synctv/swagger_yard] in which this gem is
+[Chris Trinh](https://github.com/chtrinh) author of [SwaggerYard](https://github.com/synctv/swagger_yard) in which this gem is
 inspired and used a base.

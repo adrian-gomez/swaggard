@@ -1,70 +1,82 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Swagger UI</title>
-    <link href='//fonts.googleapis.com/css?family=Droid+Sans:400,700' rel='stylesheet' type='text/css'/>
+  <title>Swagger UI</title>
 
-    <%= stylesheet_link_tag    'swaggard/application', media: 'all' %>
-    <%= javascript_include_tag 'swaggard/application' %>
+  <%= stylesheet_link_tag    'swaggard/application', media: 'all' %>
+  <%= javascript_include_tag 'swaggard/application' %>
 
-    <script type="text/javascript">
-	$(function () {
-	    window.swaggerUi = new SwaggerUi({
-                discoveryUrl: location.protocol + "//" + location.host + "/swagger/api",
-                dom_id:"swagger-ui-container",
-                supportHeaderParams: true,
-                supportedSubmitMethods: ['get', 'post', 'put', 'delete'],
-                onComplete: function(swaggerApi, swaggerUi){
-                	if(console) {
-                        console.log("Loaded SwaggerUI")
-                        console.log(swaggerApi);
-                        console.log(swaggerUi);
-                    }
-                  $('pre code').each(function(i, e) {hljs.highlightBlock(e)});
-                },
-                onFailure: function(data) {
-                	if(console) {
-                        console.log("Unable to Load SwaggerUI");
-                        console.log(data);
-                    }
-                },
-                docExpansion: "none"
+  <script type="text/javascript">
+    $(function () {
+      var url = window.location.search.match(/url=([^&]+)/);
+      if (url && url.length > 1) {
+        url = decodeURIComponent(url[1]);
+      } else {
+        url = location.protocol + "//" + location.host + "/swagger/api";
+      }
+      window.swaggerUi = new SwaggerUi({
+        url: url,
+        dom_id: "swagger-ui-container",
+        supportedSubmitMethods: ['get', 'post', 'put', 'delete', 'patch'],
+        onComplete: function(swaggerApi, swaggerUi){
+          if(typeof initOAuth == "function") {
+            /*
+            initOAuth({
+              clientId: "your-client-id",
+              realm: "your-realms",
+              appName: "your-app-name"
             });
+            */
+          }
+          $('pre code').each(function(i, e) {
+            hljs.highlightBlock(e)
+          });
+        },
+        onFailure: function(data) {
+          log("Unable to Load SwaggerUI");
+        },
+        docExpansion: "none",
+        sorter : "alpha"
+      });
 
-            window.swaggerUi.load();
-        });
+      function addApiKeyAuthorization() {
+        var key = $('#input_apiKey')[0].value;
+        log("key: " + key);
+        if(key && key.trim() != "") {
+            log("added key " + key);
+            window.authorizations.add("api_key", new ApiKeyAuthorization("api_key", key, "query"));
+        }
+      }
 
-    </script>
+      $('#input_apiKey').change(function() {
+        addApiKeyAuthorization();
+      });
+
+      // if you have an apiKey you would like to pre-populate on the page for demonstration purposes...
+      /*
+        var apiKey = "myApiKeyXXXX123456789";
+        $('#input_apiKey').val(apiKey);
+        addApiKeyAuthorization();
+      */
+
+      window.swaggerUi.load();
+  });
+  </script>
 </head>
 
-<body>
+<body class="swagger-section">
 <div id='header'>
-    <div class="swagger-ui-wrap">
-        <a id="logo" href="http://swagger.wordnik.com">swagger</a>
-
-        <form id='api_selector'>
-            <div class='input icon-btn'>
-                <img id="show-pet-store-icon" src="<%= image_path('swaggard/pet_store_api.png') %>" title="Show Swagger Petstore Example Apis">
-            </div>
-            <div class='input icon-btn'>
-                <img id="show-wordnik-dev-icon" src="<%=image_path('swaggard/wordnik_api.png') %>" title="Show Wordnik Developer Apis">
-            </div>
-            <div class='input'><input placeholder="http://example.com/api" id="input_baseUrl" name="baseUrl"
-                                      type="text"/></div>
-            <div class='input'><input placeholder="api_key" id="input_apiKey" name="apiKey" type="text"/></div>
-            <div class='input'><a id="explore" href="#">Explore</a></div>
-        </form>
-    </div>
+  <div class="swagger-ui-wrap">
+    <a id="logo" href="http://swagger.io">swagger</a>
+    <form id='api_selector'>
+      <div class='input'><input placeholder="http://example.com/api" id="input_baseUrl" name="baseUrl" type="text"/></div>
+      <div class='input'><input placeholder="api_key" id="input_apiKey" name="apiKey" type="text"/></div>
+      <div class='input'><a id="explore" href="#">Explore</a></div>
+    </form>
+  </div>
 </div>
 
-<div id="message-bar" class="swagger-ui-wrap">
-    &nbsp;
-</div>
-
-<div id="swagger-ui-container" class="swagger-ui-wrap">
-
-</div>
-
+<div id="message-bar" class="swagger-ui-wrap">&nbsp;</div>
+<div id="swagger-ui-container" class="swagger-ui-wrap"></div>
 </body>
-
 </html>

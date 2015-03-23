@@ -10,8 +10,6 @@ module Swaggard
 
       @notes = yard_object.docstring.lines[1..-1]
 
-      # p @description
-
       yard_object.tags.each do |tag|
         value = tag.text
 
@@ -22,16 +20,14 @@ module Swaggard
           @parameters << parse_parameter(value)
         when "parameter_list"
           @parameters << parse_parameter_list(value)
-          # when "summary"
-          #   @summary = value
+        when "response_class"
+          @response_class = value
           # when "notes"
           #   @notes = value.gsub("\n", "<br\>")
         end
       end
 
       if controller_class
-        # p controller_class.controller_path
-        # p routes[controller_class.controller_path]
         route = (routes[controller_class.controller_path] || {})[yard_object.name.to_s]
         if route
           # parse_path("[#{route[:verb]}] #{route[:path]}")
@@ -69,17 +65,10 @@ module Swaggard
         "produces"       => Swaggard.api_formats.map { |format| "application/#{format}" },
         "parameters"     => parameters,
         "summary"        => summary || description,
-        "notes"          => notes,
+        "description"    => '111111',
+        "notes"          => 'notes',
         "errorResponses" => error_responses,
-        "type"           =>  'name',
-        'responseMessages' => [
-          {
-            "code" => 200,
-            "message" => "Ok",
-            "responseModel" => "controllers.Ping"
-          }
-        ]
-      }
+      }.merge(response_model)
     end
 
     def to_h
@@ -88,6 +77,36 @@ module Swaggard
         "description" => description,
         "operations"  => [operation],
       }
+    end
+
+    def array_response?
+      response_class =~ /Array/
+    end
+
+    def response_model
+      if array_response?
+        {
+          "type"           =>  'array',
+          'items'          => {
+            '$ref'        => "ProductSerializer"
+          }
+        }
+      else
+        { 'responseMessages' => response_messages }
+      end
+    end
+
+    def response_messages
+      messages = []
+      if response_class
+        messages << {
+          "code" => 200,
+          "message" => "Ok",
+          "responseModel" => response_class
+        }
+      end
+
+      messages
     end
 
     def valid?

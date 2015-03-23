@@ -54,7 +54,7 @@ module Swaggard
       yard_objects = ::YARD::Registry.all
       ::YARD::Registry.clear
 
-      @parser.run(yard_objects, @routes)
+      @parser.run(yard_objects, @routes, @models)
     end
 
     def generate!(controller_path, models_path, routes)
@@ -68,12 +68,14 @@ module Swaggard
     end
 
     def get_api(resource_name)
+      parse_models
       parse_controllers
 
       parse_file(resource_to_file_path[resource_name]).to_h
     end
 
     def get_listing
+      parse_models
       parse_controllers
     end
 
@@ -96,8 +98,11 @@ module Swaggard
       @parser = ControllersParser.new
 
       Dir[@controller_path].each do |file|
-        if api_declaration = parse_file(file)
-          resource_to_file_path[api_declaration.resource_name] = file
+        yard_objects = get_yard_objects(file)
+
+        api_declaration = @parser.run(yard_objects, @routes, @models)
+        if api_declaration
+          resource_to_file_path[api_declaration.file_path] = file
         end
       end
 
@@ -119,7 +124,7 @@ module Swaggard
         @models.concat(parser.run(yard_objects))
       end
 
-      p @models
+      @models
     end
 
     def get_yard_objects(file)
