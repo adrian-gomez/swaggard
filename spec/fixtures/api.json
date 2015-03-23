@@ -1,0 +1,1 @@
+{"apiVersion":"1.0","swaggerVersion":"1.1","basePath":"http://localhost:3043/swagger/api","apis":[{"path":"/merchants","description":"This document describes the API for creating, reading, and deleting account ownerships."}]}

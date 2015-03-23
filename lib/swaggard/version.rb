@@ -1,0 +1,5 @@
+module Swaggard
+
+  VERSION = '0.0.1'
+
+end
