@@ -121,7 +121,7 @@ Here is a example of how to use Swaggard
 
     end
 
-![Web UI](https://raw.github.com/Moove-it/swaggard/master/example/web-ui.png)
+![Web UI](https://raw.githubusercontent.com/Moove-it/swaggard/master/example/web-iu.png)
 
 
 Authentication
