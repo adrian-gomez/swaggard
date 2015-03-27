@@ -19,6 +19,7 @@ And also:
   - Bring support for form and body params.
   - and more...
 
+
 Installation
 ------------
   
@@ -82,6 +83,23 @@ Here is a example of how to use Swaggard
 
 
 ![Web UI](https://raw.github.com/synctv/swagger_yard/master/example/web-ui.png)
+
+
+Authentication
+--------------
+
+Swaggard supports two types of authentication: header and query.
+
+You can configure it as follows:
+
+    # config/initializers/swaggard.rb
+    Swaggard.configure do |config|
+      config.authentication_type  = 'header' # Defaults to 'query'
+      config.authentication_key   = 'X-AUTH-TOKEN' # Defaults to 'api_key'
+      config.authentication_value = 'your-secret-key' # Initial value for authentication. Defaults to ''
+    end
+
+Even if you provide a authentication_value you can later change it from the ui.
 
 More Information
 -----------------

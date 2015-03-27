@@ -19,15 +19,6 @@
         dom_id: "swagger-ui-container",
         supportedSubmitMethods: ['get', 'post', 'put', 'delete', 'patch'],
         onComplete: function(swaggerApi, swaggerUi){
-          if(typeof initOAuth == "function") {
-            /*
-            initOAuth({
-              clientId: "your-client-id",
-              realm: "your-realms",
-              appName: "your-app-name"
-            });
-            */
-          }
           $('pre code').each(function(i, e) {
             hljs.highlightBlock(e)
           });
@@ -43,24 +34,25 @@
         var key = $('#input_apiKey')[0].value;
         log("key: " + key);
         if(key && key.trim() != "") {
-            log("added key " + key);
-            window.authorizations.add("api_key", new ApiKeyAuthorization("api_key", key, "query"));
+          log("added key " + key);
+          window.authorizations.add('key', new ApiKeyAuthorization("<%= authentication_key %>",
+                                           key,
+                                           "<%= authentication_type %>"));
         }
       }
 
-      $('#input_apiKey').change(function() {
+      var $apiKeyInput = $('#input_apiKey');
+
+      $apiKeyInput.change(function() {
         addApiKeyAuthorization();
       });
 
-      // if you have an apiKey you would like to pre-populate on the page for demonstration purposes...
-      /*
-        var apiKey = "myApiKeyXXXX123456789";
-        $('#input_apiKey').val(apiKey);
-        addApiKeyAuthorization();
-      */
+      var apiKey = "<%= authentication_value %>";
+      $apiKeyInput.val(apiKey);
+      addApiKeyAuthorization();
 
       window.swaggerUi.load();
-  });
+    });
   </script>
 </head>
 
@@ -70,7 +62,7 @@
     <a id="logo" href="http://swagger.io">swagger</a>
     <form id='api_selector'>
       <div class='input'><input placeholder="http://example.com/api" id="input_baseUrl" name="baseUrl" type="text"/></div>
-      <div class='input'><input placeholder="api_key" id="input_apiKey" name="apiKey" type="text"/></div>
+      <div class='input'><input placeholder="<%= authentication_key %>" id="input_apiKey" name="apiKey" type="text"/></div>
       <div class='input'><a id="explore" href="#">Explore</a></div>
     </form>
   </div>
