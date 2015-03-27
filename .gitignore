@@ -1,4 +1,5 @@
 log/*.log
+*.gem
 
 coverage
 Gemfile.lock

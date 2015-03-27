@@ -27,7 +27,7 @@ Put Swaggard in your Gemfile:
 
     gem 'swaggard'
 
-Install the gem with Bunder:
+Install the gem with Bundler:
 
     bundle install
 
@@ -38,16 +38,18 @@ Getting Started
 Place your configuration in a your rails initializers
     
     # config/initializers/swaggard.rb
+
     Swaggard.configure do |config|
-      config.api_version = "0.1"
-      config.doc_base_path = "http://swagger.example.com/doc"
-      config.api_base_path = "http://swagger.example.com/api"
+      config.api_version = '0.1'
+      config.doc_base_path = 'http://swagger.example.com/doc'
+      config.api_base_path = 'http://swagger.example.com/api'
     end
 
 Mount your engine
 
 	# config/routes.rb
-	mount Swaggard::Engine, at: "/swagger"
+
+	mount Swaggard::Engine, at: '/swagger'
 
 
 Example
@@ -55,34 +57,71 @@ Example
 
 Here is a example of how to use Swaggard
 
-    # This document describes the API for creating, reading, and deleting account ownerships.
+    # app/controllers/users/posts_controller.rb
+
+    # User posts
     #
-    class Accounts::OwnershipsController < ActionController::Base
-      ##
-      # Returns a list of ownerships associated with the account.
+    # API for creating, deleting, and listing user posts.
+    class User::PostsController < ActionController::Base
+
+      # Returns the list of user posts
       #
-      # Status can be -1(Deleted), 0(Inactive), 1(Active), 2(Expired) and 3(Cancelled).
-      #
-      # @parameter          [Integer]   offset            Used for pagination of response data (default: 25 items per response). Specifies the offset of the next block of data to receive.
-      # @parameter          [Array]     status            Filter by status. (e.g. status[]=1&status[]=2&status[]=3).
-      # @parameter_list     [String]    sort_order        Orders response by fields. (e.g. sort_order=created_at).
-      #                     [List]      id                
-      #                     [List]      begin_at          
-      #                     [List]      end_at            
-      #                     [List]      created_at        
-      # @parameter          [Boolean]   sort_descending   Reverse order of sort_order sorting, make it descending.
-      # @parameter          [Date]      begin_at_greater  Filters response to include only items with begin_at >= specified timestamp (e.g. begin_at_greater=2012-02-15T02:06:56Z).
-      # @parameter          [Date]      begin_at_less     Filters response to include only items with begin_at <= specified timestamp (e.g. begin_at_less=2012-02-15T02:06:56Z).
-      # @parameter          [Date]      end_at_greater    Filters response to include only items with end_at >= specified timestamp (e.g. end_at_greater=2012-02-15T02:06:56Z).
-      # @parameter          [Date]      end_at_less       Filters response to include only items with end_at <= specified timestamp (e.g. end_at_less=2012-02-15T02:06:56Z).
-      #
+      # @response_class Array<PostSerializer>
       def index
         ...
       end
+
+      # Create user post
+      #
+      # @body_parameter [string] title
+      # @body_parameter [string] body
+      # @body_parameter [string] topic_id
+      #
+      # @response_class PostSerializer
+      def create
+        ...
+      end
+
     end
 
 
-![Web UI](https://raw.github.com/synctv/swagger_yard/master/example/web-ui.png)
+    # app/serializers/post_serializer.rb
+
+    # @attr [integer] id
+    # @attr [string] title
+    # @attr [string] body
+    # @attr [date-time] created_at
+    # @attr [date-time] updated_at
+    # @attr [TopicSerializer] topic
+    class PostSerializer < ActiveModel::Serializer
+
+      attribute :id
+      attribute :title
+      attribute :body
+      attribute :created_at
+      attribute :updated_at
+
+      has_one :topic, serializer: TopicSerializer
+
+    end
+
+
+    # app/serializers/topic_serializer.rb
+
+    # @attr [integer] id
+    # @attr [string] name
+    # @attr [date-time] created_at
+    # @attr [date-time] updated_at
+    class TopicSerializer < ActiveModel::Serializer
+
+      attribute :id
+      attribute :name
+      attribute :created_at
+      attribute :updated_at
+
+    end
+
+![Web UI](https://raw.github.com/Moove-it/swaggard/master/example/web-ui.png)
 
 
 Authentication

@@ -1,6 +1,5 @@
 module Swaggard
   class SwaggerController < ApplicationController
-    layout false
 
     def index
       swagger_listing = Swaggard.get_doc
@@ -9,6 +8,10 @@ module Swaggard
     end
 
     def doc
+      @authentication_type = Swaggard.configuration.authentication_type
+      @authentication_key = Swaggard.configuration.authentication_key
+      @authentication_value = Swaggard.configuration.authentication_value
+
       render :doc
     end
 
