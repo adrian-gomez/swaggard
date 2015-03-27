@@ -1,33 +1,30 @@
-require_relative 'api'
-require_relative 'api_declaration'
-require_relative 'resource_listing'
+require_relative 'operation'
+require_relative 'tag'
 
 module Swaggard
   class ControllersParser
-    attr_reader :listing
 
-    def initialize
-      @listing = ResourceListing.new
-    end
-
-    def run(yard_objects, routes, models)
-      api_declaration = ApiDeclaration.new(models)
-      retain_api = false
+    def run(yard_objects, routes)
+      tag = nil
+      operations = []
+      retain_tag = false
 
       yard_objects.each do |yard_object|
         if yard_object.type == :class
-          retain_api = api_declaration.add_listing_info(yard_object)
-          break unless retain_api
+          tag = Tag.new(yard_object)
+          retain_tag = tag.valid?
+          break unless retain_tag
         elsif yard_object.type == :method
-          api = Api.new(yard_object, api_declaration.klass, routes)
-          api_declaration.add_api(api) if api.valid?
+          operation = Operation.new(yard_object, tag, routes)
+          operations << operation if operation.valid?
+        else
+          break
         end
       end
 
-      return unless retain_api
+      return unless retain_tag
 
-      @listing.add(api_declaration)
-      api_declaration
+      return tag, operations
     end
 
   end

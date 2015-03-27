@@ -1,16 +1,12 @@
 module Swaggard
   class RoutesParser
 
-    def initialize(routes)
-      @routes = routes
-    end
-
-    def run
-      return {} unless @routes
+    def run(routes)
+      return {} unless routes
 
       parsed_routes = {}
 
-      @routes.each do |route|
+      routes.each do |route|
         controller = route_controller(route)
         action = route_action(route)
 
@@ -42,7 +38,7 @@ module Swaggard
     def route_path(route)
       path = route.path.spec.to_s
 
-      path.gsub!('(.:format)', '.{format_type}')
+      path.gsub!('(.:format)', '')
       route.required_parts.each { |part| path.gsub!(":#{part}", "{#{part}}") }
 
       path

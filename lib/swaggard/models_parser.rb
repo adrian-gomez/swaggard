@@ -1,39 +1,26 @@
-require_relative 'model'
+require_relative 'definition'
 require_relative 'property'
 
 module Swaggard
   class ModelsParser
-    attr_reader :listing
-
-    # def initialize
-    #   @listing = ResourceListing.new
-    # end
 
     def run(yard_objects)
-      models = []
+      definitions = []
 
-      model = nil
       yard_objects.each do |yard_object|
-        if yard_object.type == :class
-          model = Model.new(yard_object)
+        next unless yard_object.type == :class
 
-          yard_object.tags.each do |tag|
-            attribute = Property.new(tag)
-            model.add_property(attribute)
-          end
-          models << model
+        definition = Definition.new(yard_object.name)
 
-        # elsif yard_object.type == :method
-        #   # p yard_object
-        #   # p yard_object.tags
-        #
-        #   attribute = Property.new(yard_object)
-        #   model.add_property(attribute)
+        yard_object.tags.each do |tag|
+          property = Property.new(tag)
+          definition.add_property(property)
         end
+
+        definitions << definition
       end
 
-      # @listing.add(api_declaration)
-      models
+      definitions
     end
 
   end

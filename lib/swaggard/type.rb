@@ -1,34 +1,59 @@
 module Swaggard
   class Type
 
-    def self.from_type_list(types)
-      parts = types.first.split(/[<>]/)
-      new(parts.last, parts.grep(/array/i).any?)
+    attr_reader :name
+
+    def self.new(types)
+      type = super
+
+      all[type.name] = type
+
+      type
     end
 
-    attr_reader :name, :array
+    def self.all
+      @all ||= {}
+    end
 
-    def initialize(name, array=false)
-      @name, @array = name, array
+    def initialize(types)
+      parse(types)
+    end
+
+    def to_doc
+      doc = { type_tag => type }
+
+      doc.merge!({ 'items' => { type_tag => name } }) if @is_array
+
+      doc
+    end
+
+    private
+
+    def parse(types)
+      parts = types.first.split(/[<>]/)
+
+      @name = parts.last
+      @is_array = parts.grep(/array/i).any?
     end
 
     # TODO: have this look at resource listing?
     def ref?
-      /[[:upper:]]/.match(name)
+      self.class.all[@name].present?
     end
 
     def model_name
-      ref? ? name : nil
+      ref? ? @name : nil
     end
 
-    alias :array? :array
+    def type
+      @is_array ? 'array' : @name
+    end
 
-    def to_h
-      type_tag = ref? ? "$ref" : "type"
-      if array?
-        {"type"=>"array", "items"=> { type_tag => name }}
+    def type_tag
+      if !@is_array && ref?
+        '$ref'
       else
-        {"type"=>name}
+        'type'
       end
     end
 

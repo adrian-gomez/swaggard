@@ -3,21 +3,17 @@ require_relative 'type'
 module Swaggard
   class Property
 
-    attr_reader :property_name, :type, :description
+    attr_reader :id, :type, :description
 
     def initialize(yard_object)
-      @property_name = yard_object.name
-      @type = Type.from_type_list(yard_object.types)
-      @description = ''
+      @id = yard_object.name
+      @type = Type.new(yard_object.types)
+      @description = yard_object.text
     end
 
-    def model_name
-      @type.model_name
-    end
-
-    def to_h
-      result = @type.to_h
-      result["description"] = @description if @description
+    def to_doc
+      result = @type.to_doc
+      result['description'] = @description if @description
       result
     end
 

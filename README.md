@@ -10,8 +10,14 @@ Swaggard vs SwaggerYard
 -----------------------
 
 The main reason this gem exists is to avoid having to write by hand some information and use what
-rails already give us ie: controllers paths and methods paths.
-And also to bring support for rails 4 and swagger 2.
+rails already give us ie: controllers names and methods paths.
+
+And also:
+  - Bring support for Rails 4.
+  - Bring support for Swagger 2.
+  - Bring support for models (serializers).
+  - Bring support for form and body params.
+  - and more...
 
 Installation
 ------------
