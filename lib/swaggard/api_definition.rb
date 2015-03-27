@@ -38,10 +38,10 @@ module Swaggard
           }
         },
         'host'        => Swaggard.configuration.host,
-        "basePath"    => Swaggard.configuration.api_base_path,
-        "tags"        => @tags.map(&:to_doc),
+        'basePath'    => Swaggard.configuration.api_base_path,
+        'tags'        => @tags.map(&:to_doc),
         'schemes'     => Swaggard.configuration.schemes,
-        "paths"       => Hash[@paths.values.map { |path| [path.path, path.to_doc] }],
+        'paths'       => Hash[@paths.values.map { |path| [path.path, path.to_doc] }],
         'definitions' => Hash[@definitions.map { |definition| [definition.id, definition.to_doc] }]
       }
     end

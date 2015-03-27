@@ -1,7 +1,8 @@
 require_relative 'parameters/body'
 require_relative 'parameters/form'
-require_relative 'parameters/path'
 require_relative 'parameters/list'
+require_relative 'parameters/path'
+require_relative 'parameters/query'
 
 require_relative 'query_parameter'
 require_relative 'response'
@@ -53,13 +54,13 @@ module Swaggard
       consumes = @formats.map { |format| "application/#{format}" }
 
       {
-        "tags"           => [@tag.name],
-        "summary"        => @summary,
+        'tags'           => [@tag.name],
+        'summary'        => @summary,
         'description'    => @description,
         'operationId'    => @name,
         'consumes'       => consumes,
-        "produces"       => produces,
-        "parameters"     => @parameters.map(&:to_doc),
+        'produces'       => produces,
+        'parameters'     => @parameters.map(&:to_doc),
         'responses'      => Hash[@responses.map { |response| [response.status_code, response.to_doc] }]
       }
     end

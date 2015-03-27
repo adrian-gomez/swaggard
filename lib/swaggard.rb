@@ -43,22 +43,13 @@ module Swaggard
       parse_controllers
     end
 
-    ##
-    # Register some custom yard tags used by swagger-ui
+    # Register some custom yard tags
     def register_custom_yard_tags!
-      ::YARD::Tags::Library.define_tag("Api resource", :resource)
-      ::YARD::Tags::Library.define_tag("Resource path", :resource_path)
-      ::YARD::Tags::Library.define_tag("Api path", :path)
-
-      ::YARD::Tags::Library.define_tag("Query parameter", :query_parameter)
-      ::YARD::Tags::Library.define_tag("Form parameter", :form_parameter)
-      ::YARD::Tags::Library.define_tag("Body parameter", :body_parameter)
-
-      ::YARD::Tags::Library.define_tag("Parameter list", :parameter_list)
-      ::YARD::Tags::Library.define_tag("Status code", :status_code)
-      ::YARD::Tags::Library.define_tag("Implementation notes", :notes)
-      ::YARD::Tags::Library.define_tag("Response class", :response_class)
-      ::YARD::Tags::Library.define_tag("Api Summary", :summary)
+      ::YARD::Tags::Library.define_tag('Query parameter', :query_parameter)
+      ::YARD::Tags::Library.define_tag('Form parameter',  :form_parameter)
+      ::YARD::Tags::Library.define_tag('Body parameter',  :body_parameter)
+      ::YARD::Tags::Library.define_tag('Parameter list',  :parameter_list)
+      ::YARD::Tags::Library.define_tag('Response class',  :response_class)
     end
 
     def parse_controllers

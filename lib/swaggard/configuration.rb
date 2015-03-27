@@ -3,10 +3,9 @@ module Swaggard
   # Configuration for Swagger Yard, use like:
   #
   #   Swaggard.configure do |config|
-  #     config.swagger_version = "1.1"
-  #     config.api_version = "0.1"
-  #     config.doc_base_path = "http://swagger.example.com/doc"
-  #     config.api_base_path = "http://swagger.example.com/api"
+  #     config.api_version = '0.1'
+  #     config.doc_base_path = 'http://swagger.example.com/doc'
+  #     config.api_base_path = 'http://swagger.example.com/api'
   #   end
   class Configuration
 
@@ -16,7 +15,7 @@ module Swaggard
                 :tos, :contact, :host
 
     def swagger_version
-      @swagger_version ||= "2.0"
+      @swagger_version ||= '2.0'
     end
 
     def api_version

@@ -16,7 +16,7 @@ module Swaggard
     def to_doc
       {
         'name'        => @name,
-        "description" => @description
+        'description' => @description
       }
     end
 
