@@ -21,9 +21,14 @@ module Swaggard
       end
 
       def to_doc
-        doc = { type_tag => type }
+        doc = if @is_array
+                { 'type' => 'array' }
+              else
+                { type_tag => type_name }
+              end
 
-        doc.merge!({ 'items' => { type_tag => name } }) if @is_array
+
+        doc.merge!({ 'items' => { type_tag => type_name } }) if @is_array
 
         doc
       end
@@ -46,15 +51,19 @@ module Swaggard
         ref? ? @name : nil
       end
 
-      def type
-        @is_array ? 'array' : @name
-      end
-
       def type_tag
-        if !@is_array && ref?
+        if ref?
           '$ref'
         else
           'type'
+        end
+      end
+
+      def type_name
+        if ref?
+          "#/definitions/#{name}"
+        else
+          name
         end
       end
 
