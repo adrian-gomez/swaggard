@@ -138,7 +138,7 @@ Here is a example of how to use Swaggard
 
 Will generate
 
-![Web UI](https://raw.githubusercontent.com/Moove-it/swaggard/master/example/web-iu.png)
+![Web UI](https://raw.githubusercontent.com/Moove-it/swaggard/master/example/web-ui.png)
 
 
 Authentication
