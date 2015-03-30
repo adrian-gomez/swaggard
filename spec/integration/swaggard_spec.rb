@@ -1,14 +1,15 @@
 require 'spec_helper'
 
-describe Swaggard, '.generate' do
+describe Swaggard, '.get_doc' do
 
-  let(:controller_path) {File.expand_path('../../fixtures/dummy/app/controllers/pets_controller.rb', __FILE__)}
-  let(:api_json) {File.read(File.expand_path('../../fixtures/api.json', __FILE__))}
+  let(:controller_path) { File.expand_path('../../fixtures/dummy/app/controllers/pets_controller.rb', __FILE__) }
+  let(:api_json)        { File.read(File.expand_path('../../fixtures/api.json', __FILE__)) }
 
-  it 'generates swagger api json for the given controller' do
-    Swaggard.generate!(controller_path, '', Dummy::Application.routes.routes)
-
-    puts JSON(Swaggard.get_doc)
+  it 'generates swagger json' do
+    Swaggard.configure do |config|
+      config.controllers_path = controller_path
+      config.routes = Dummy::Application.routes.routes
+    end
 
     swagger_json = JSON.dump(Swaggard.get_doc)
 

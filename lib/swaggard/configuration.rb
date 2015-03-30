@@ -12,7 +12,7 @@ module Swaggard
   #   end
   class Configuration
 
-    attr_accessor :doc_base_path, :api_base_path
+    attr_accessor :doc_base_path, :api_base_path, :controllers_path, :models_path, :routes
 
     attr_writer :swagger_version, :api_version, :api_path, :api_formats, :title, :description,
                 :tos, :contact, :host, :authentication_type, :authentication_key,

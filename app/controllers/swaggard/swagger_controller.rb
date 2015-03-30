@@ -2,17 +2,19 @@ module Swaggard
   class SwaggerController < ApplicationController
 
     def index
-      swagger_listing = Swaggard.get_doc
+      respond_to do |format|
+        format.html do
+          @authentication_type = Swaggard.configuration.authentication_type
+          @authentication_key = Swaggard.configuration.authentication_key
+          @authentication_value = Swaggard.configuration.authentication_value
 
-      render :json => swagger_listing
-    end
+          render :index
+        end
 
-    def doc
-      @authentication_type = Swaggard.configuration.authentication_type
-      @authentication_key = Swaggard.configuration.authentication_key
-      @authentication_value = Swaggard.configuration.authentication_value
-
-      render :doc
+        format.json do
+          render :json => Swaggard.get_doc
+        end
+      end
     end
 
   end

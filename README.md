@@ -51,9 +51,24 @@ Mount your engine
 
 	mount Swaggard::Engine, at: '/swagger'
 
+Access your service documentation
+
+	open http://localhost:3000/swagger
+
+
+Access the raw swagger json
+
+	open http://localhost:3000/swagger.json
 
 Example
 -------
+
+By just using Swaggard you'll get documentation for the endpoints that exist on your service:
+http method, path, path params. And grouping will be done based on the controller that holds
+each path.
+
+This is fine base but you should add more documentation in order to provide more information
+of the expected inputs and outputs or even change the grouping of the endpoints.
 
 Here is a example of how to use Swaggard
 
@@ -120,6 +135,8 @@ Here is a example of how to use Swaggard
       attribute :updated_at
 
     end
+
+Will generate
 
 ![Web UI](https://raw.githubusercontent.com/Moove-it/swaggard/master/example/web-iu.png)
 

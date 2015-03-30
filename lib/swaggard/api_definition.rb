@@ -1,4 +1,4 @@
-require_relative 'path'
+require_relative 'swagger/path'
 
 module Swaggard
   class ApiDefinition
@@ -7,16 +7,18 @@ module Swaggard
 
     def initialize
       @paths        = {}
-      @tags         = []
+      @tags         = {}
       @definitions  = []
     end
 
     def add_tag(tag)
-      @tags << tag
+      @tags[tag.name] ||= tag
+
+      @tags[tag.name].description = tag.description unless tag.description.blank?
     end
 
     def add_operation(operation)
-      @paths[operation.path] ||= Path.new(operation.path)
+      @paths[operation.path] ||= Swagger::Path.new(operation.path)
       @paths[operation.path].add_operation(operation)
       @definitions.concat(operation.definitions)
     end
@@ -39,7 +41,7 @@ module Swaggard
         },
         'host'        => Swaggard.configuration.host,
         'basePath'    => Swaggard.configuration.api_base_path,
-        'tags'        => @tags.map(&:to_doc),
+        'tags'        => @tags.map { |_, tag| tag.to_doc },
         'schemes'     => Swaggard.configuration.schemes,
         'paths'       => Hash[@paths.values.map { |path| [path.path, path.to_doc] }],
         'definitions' => Hash[@definitions.map { |definition| [definition.id, definition.to_doc] }]
