@@ -6,8 +6,14 @@ module Swaggard
       app.reload_routes!
 
       Swaggard.configure do |config|
-        config.controllers_path = "#{app.root}/app/controllers/**/*.rb"
-        config.models_path = "#{app.root}/app/serializers/**/*.rb"
+        unless config.controllers_path
+          config.controllers_path = "#{app.root}/app/controllers/**/*.rb"
+        end
+
+        unless config.models_paths
+          config.models_paths = ["#{app.root}/app/serializers/**/*.rb"]
+        end
+
         config.routes = app.routes.routes
       end
 

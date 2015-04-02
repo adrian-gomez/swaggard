@@ -75,13 +75,15 @@ module Swaggard
       parser = Parsers::Models.new
 
       definitions =[]
-      Dir[configuration.models_path].each do |file|
-        yard_objects = get_yard_objects(file)
+      configuration.models_paths.each do |path|
+        Dir[path].each do |file|
+          yard_objects = get_yard_objects(file)
 
-        definitions.concat(parser.run(yard_objects))
+          definitions.concat(parser.run(yard_objects))
+        end
+
+        @api.definitions = definitions
       end
-
-      @api.definitions = definitions
     end
 
     def get_yard_objects(file)
