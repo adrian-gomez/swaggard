@@ -11,7 +11,8 @@ module Swaggard
 
       def to_doc
         {
-          'schema' => response_model
+          'description' => '',
+          'schema'      => response_model
         }
       end
 

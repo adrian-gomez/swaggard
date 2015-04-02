@@ -12,7 +12,9 @@ module Swaggard
         end
 
         format.json do
-          render :json => Swaggard.get_doc
+          doc = Swaggard.get_doc(request.host_with_port)
+
+          render json: doc
         end
       end
     end

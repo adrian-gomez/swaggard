@@ -30,10 +30,14 @@ module Swaggard
       ::YARD::Tags::Library.define_tag('Response class',  :response_class)
     end
 
-    def get_doc
+    def get_doc(host)
       load!
 
-      @api.to_doc
+      doc = @api.to_doc
+
+      doc['host'] = host if doc['host'].blank?
+
+      doc
     end
 
     private

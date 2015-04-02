@@ -12,11 +12,11 @@ module Swaggard
   #   end
   class Configuration
 
-    attr_accessor :doc_base_path, :api_base_path, :controllers_path, :models_path, :routes
+    attr_accessor :doc_base_path, :controllers_path, :models_path, :routes
 
-    attr_writer :swagger_version, :api_version, :api_path, :api_formats, :title, :description,
-                :tos, :contact, :host, :authentication_type, :authentication_key,
-                :authentication_value
+    attr_writer :swagger_version, :api_base_path, :api_version, :api_path, :api_formats, :title,
+                :description, :tos, :contact_email, :contact_name, :contact_url, :host,
+                :authentication_type, :authentication_key, :authentication_value
 
     def swagger_version
       @swagger_version ||= '2.0'
@@ -28,6 +28,10 @@ module Swaggard
 
     def api_path
       @api_path ||= ''
+    end
+
+    def api_base_path
+      @api_base_path ||= '/'
     end
 
     def api_formats
@@ -54,8 +58,16 @@ module Swaggard
       @tos ||= ''
     end
 
-    def contact
-      @contact ||= ''
+    def contact_name
+      @contact_name ||= ''
+    end
+
+    def contact_email
+      @contact_email ||= ''
+    end
+
+    def contact_url
+      @contact_email ||= ''
     end
 
     def license_name

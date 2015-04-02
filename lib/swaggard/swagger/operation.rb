@@ -5,6 +5,7 @@ require_relative 'parameters/path'
 require_relative 'parameters/query'
 
 require_relative 'response'
+require_relative 'default_response'
 
 module Swaggard
   module Swagger
@@ -43,6 +44,8 @@ module Swaggard
         build_path_parameters(routes)
 
         @parameters.sort_by { |parameter| parameter.name }
+
+        @responses << DefaultResponse.new unless @responses.any?
       end
 
       def valid?

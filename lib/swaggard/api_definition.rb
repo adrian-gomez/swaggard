@@ -32,7 +32,9 @@ module Swaggard
           'title'           => Swaggard.configuration.title,
           'termsOfService'  => Swaggard.configuration.tos,
           'contact' => {
-            'email' => Swaggard.configuration.contact
+            'name'  => Swaggard.configuration.contact_name,
+            'email' => Swaggard.configuration.contact_email,
+            'url'   => Swaggard.configuration.contact_url
           },
           'license' => {
             'name'  => Swaggard.configuration.license_name,
