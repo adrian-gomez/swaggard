@@ -11,7 +11,7 @@ module Swaggard
         yard_objects.each do |yard_object|
           next unless yard_object.type == :class
 
-          definition = Swagger::Definition.new(yard_object.name)
+          definition = Swagger::Definition.new(yard_object.path)
 
           yard_object.tags.each do |tag|
             property = Swagger::Property.new(tag)
