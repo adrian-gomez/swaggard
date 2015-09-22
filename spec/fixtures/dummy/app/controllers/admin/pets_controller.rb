@@ -6,12 +6,6 @@ module Admin
     #
     def index
     end
-
-    # return a Pet
-    #
-    # @query_parameter [Integer] id The ID for the Pet
-    def show
-    end
-
+    
   end
 end
