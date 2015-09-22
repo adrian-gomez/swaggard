@@ -15,8 +15,6 @@ module Swaggard
           elsif tag && yard_object.type == :method
             operation = Swagger::Operation.new(yard_object, tag, routes)
             operations << operation if operation.valid?
-          else
-            break
           end
         end
 
