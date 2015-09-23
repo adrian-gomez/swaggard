@@ -1181,9 +1181,9 @@ OperationView = (function(_super) {
       this.model.isReadOnly = true;
     }
     this.model.description = this.model.description || this.model.notes;
-    if (this.model.description) {
-      this.model.description = this.model.description.replace(/(?:\r\n|\r|\n)/g, '<br />');
-    }
+    //if (this.model.description) {
+    //  this.model.description = this.model.description.replace(/(?:\r\n|\r|\n)/g, '<br />');
+    //}
     this.model.oauth = null;
     modelAuths = this.model.authorizations || this.model.security;
     if (modelAuths) {

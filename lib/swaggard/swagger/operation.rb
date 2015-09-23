@@ -21,7 +21,7 @@ module Swaggard
         @summary = yard_object.docstring.lines.first || ''
         @parameters  = []
         @responses = []
-        @description = (yard_object.docstring.lines[1..-1] || []).join("\n")
+        @description = (yard_object.docstring.lines[1..-1] || []).join('')
         @formats = Swaggard.configuration.api_formats
 
         yard_object.tags.each do |yard_tag|
