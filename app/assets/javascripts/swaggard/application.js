@@ -10,15 +10,15 @@
 // Read Sprockets README (https://github.com/sstephenson/sprockets#sprockets-directives) for details
 // about supported directives.
 //
-//= require swaggard/lib/shred.bundle.js
-//= require swaggard/lib/jquery-1.8.0.min.js
-//= require swaggard/lib/jquery.slideto.min.js
-//= require swaggard/lib/jquery.wiggle.min.js
-//= require swaggard/lib/jquery.ba-bbq.min.js
-//= require swaggard/lib/handlebars-2.0.0.js
-//= require swaggard/lib/underscore-min.js
-//= require swaggard/lib/backbone-min.js
-//= require swaggard/lib/swagger-client.js
-//= require swaggard/swagger-ui.js
-//= require swaggard/lib/highlight.7.3.pack.js
-//= require swaggard/lib/marked.js
+//= require swaggard/lib/jquery-1.8.0.min
+//= require swaggard/lib/jquery.slideto.min
+//= require swaggard/lib/jquery.wiggle.min
+//= require swaggard/lib/jquery.ba-bbq.min
+//= require swaggard/lib/handlebars-2.0.0
+//= require swaggard/lib/underscore-min
+//= require swaggard/lib/backbone-min
+//= require swaggard/swagger-ui
+//= require swaggard/lib/highlight.7.3.pack
+//= require swaggard/lib/marked
+//= require swaggard/lib/swagger-oauth
+//= require swaggard/swaggard

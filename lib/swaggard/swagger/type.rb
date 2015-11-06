@@ -2,35 +2,37 @@ module Swaggard
   module Swagger
     class Type
 
+      BASIC_TYPES = {
+        'integer'   => { 'type' => 'integer', 'format' => 'int32' },
+        'long'      => { 'type' => 'integer', 'format' => 'int64' },
+        'float'     => { 'type' => 'number',  'format' => 'float' },
+        'double'    => { 'type' => 'number',  'format' => 'double' },
+        'string'    => { 'type' => 'string' },
+        'byte'      => { 'type' => 'string',  'format' => 'byte' },
+        'binary'    => { 'type' => 'string',  'format' => 'binary' },
+        'boolean'   => { 'type' => 'boolean' },
+        'date'      => { 'type' => 'string',  'format' => 'date' },
+        'date-time' => { 'type' => 'string',  'format' => 'date-time' },
+        'password'  => { 'type' => 'string',  'format' => 'password' },
+        'hash'      => { 'type' => 'object' }
+      }
+
       attr_reader :name
-
-      def self.new(types)
-        type = super
-
-        all[type.name] = type
-
-        type
-      end
-
-      def self.all
-        @all ||= {}
-      end
 
       def initialize(types)
         parse(types)
       end
 
       def to_doc
-        doc = if @is_array
-                { 'type' => 'array' }
-              else
-                { type_tag => type_name }
-              end
+        if @is_array
+          { 'type' => 'array', 'items' => type_tag_and_name }
+        else
+          type_tag_and_name
+        end
+      end
 
-
-        doc.merge!({ 'items' => { type_tag => type_name } }) if @is_array
-
-        doc
+      def basic_type?
+        BASIC_TYPES.has_key?(@name.downcase)
       end
 
       private
@@ -42,28 +44,11 @@ module Swaggard
         @is_array = parts.grep(/array/i).any?
       end
 
-      # TODO: have this look at resource listing?
-      def ref?
-        self.class.all[@name].present?
-      end
-
-      def model_name
-        ref? ? @name : nil
-      end
-
-      def type_tag
-        if ref?
-          '$ref'
+      def type_tag_and_name
+        if basic_type?
+          BASIC_TYPES[@name.downcase]
         else
-          'type'
-        end
-      end
-
-      def type_name
-        if ref?
-          "#/definitions/#{name}"
-        else
-          name
+          { '$ref' => "#/definitions/#{name}" }
         end
       end
 

@@ -3,7 +3,7 @@
   font-family: 'Droid Sans';
   font-style: normal;
   font-weight: 400;
-  src: url('../fonts/droid-sans-v6-latin-regular.eot'); /* IE9 Compat Modes */
+  src: font-url('swaggard/droid-sans-v6-latin-regular.eot'); /* IE9 Compat Modes */
   src: local('Droid Sans'), local('DroidSans'),
        font-url('swaggard/droid-sans-v6-latin-regular.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
        font-url('swaggard/droid-sans-v6-latin-regular.woff2') format('woff2'), /* Super Modern Browsers */
@@ -11,6 +11,7 @@
        font-url('swaggard/droid-sans-v6-latin-regular.ttf') format('truetype'), /* Safari, Android, iOS */
        font-url('swaggard/droid-sans-v6-latin-regular.svg#DroidSans') format('svg'); /* Legacy iOS */
 }
+
 /* droid-sans-700 - latin */
 @font-face {
   font-family: 'Droid Sans';

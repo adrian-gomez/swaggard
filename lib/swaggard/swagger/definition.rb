@@ -15,7 +15,9 @@ module Swaggard
 
       def to_doc
         {
-          'properties' => Hash[@properties.map { |property| [property.id, property.to_doc] }]
+          'type'        => 'object',
+          'required'    => [],
+          'properties'  => Hash[@properties.map { |property| [property.id, property.to_doc] }]
         }
       end
 

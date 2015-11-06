@@ -141,6 +141,24 @@ Will generate
 ![Web UI](https://raw.githubusercontent.com/Moove-it/swaggard/master/example/web-ui.png)
 
 
+Primitive type
+--------------
+When one of this types is given Swaggard will handle them directly instead of searching for
+a definition:
+
+- integer
+- long
+- float
+- double
+- string
+- byte
+- binary
+- boolean
+- date
+- date-time
+- password
+- hash
+
 Authentication
 --------------
 

@@ -1,74 +1,33 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <title>Swagger UI</title>
+  <head>
+    <title>Swagger UI</title>
 
-  <%= stylesheet_link_tag    'swaggard/application', media: 'all' %>
-  <%= javascript_include_tag 'swaggard/application' %>
+    <%= favicon_link_tag 'swaggard/favicon-32x32.png', sizes: '32x32' %>
+    <%= favicon_link_tag 'swaggard/favicon-16x16.png', sizes: '16x16' %>
 
-  <script type="text/javascript">
-    $(function () {
-      var url = window.location.search.match(/url=([^&]+)/);
-      if (url && url.length > 1) {
-        url = decodeURIComponent(url[1]);
-      } else {
-        url = location.protocol + "//" + location.host + "/swagger.json";
-      }
-      window.swaggerUi = new SwaggerUi({
-        url: url,
-        dom_id: "swagger-ui-container",
-        supportedSubmitMethods: ['get', 'post', 'put', 'delete', 'patch'],
-        onComplete: function(swaggerApi, swaggerUi){
-          $('pre code').each(function(i, e) {
-            hljs.highlightBlock(e)
-          });
-        },
-        onFailure: function(data) {
-          log("Unable to Load SwaggerUI");
-        },
-        docExpansion: "none",
-        apisSorter : "alpha"
-      });
+    <%= stylesheet_link_tag    'swaggard/application', media: :screen %>
+    <%= stylesheet_link_tag    'swaggard/application_print', media: :print %>
+    <%= javascript_include_tag 'swaggard/application' %>
 
-      function addApiKeyAuthorization() {
-        var key = $('#input_apiKey')[0].value;
-        log("key: " + key);
-        if(key && key.trim() != "") {
-          log("added key " + key);
-          window.authorizations.add('key', new ApiKeyAuthorization("<%= @authentication_key %>",
-                                           key,
-                                           "<%= @authentication_type %>"));
-        }
-      }
+  </head>
 
-      var $apiKeyInput = $('#input_apiKey');
+  <body class='swagger-section'>
+    <div id='header'>
+      <div class='swagger-ui-wrap'>
+        <a id='logo' href='http://swagger.io'>swagger</a>
+        <%= form_tag '', id: :api_selector, data: { authentication_key: @authentication_key,
+                                                    authentication_type: @authentication_type,
+                                                    authentication_value: @authentication_value} do %>
+          <div class='input'><input placeholder='http://example.com/api' id='input_baseUrl' name='baseUrl' type='text'/></div>
+          <div class='input'><input placeholder='<%= @authentication_key %>' id='input_apiKey' name='apiKey' type='text'/></div>
+          <div class='input'><a id='explore' href='#'>Explore</a></div>
+        <% end %>
 
-      $apiKeyInput.change(function() {
-        addApiKeyAuthorization();
-      });
+      </div>
+    </div>
 
-      var apiKey = "<%= @authentication_value %>";
-      $apiKeyInput.val(apiKey);
-      addApiKeyAuthorization();
-
-      window.swaggerUi.load();
-    });
-  </script>
-</head>
-
-<body class="swagger-section">
-<div id='header'>
-  <div class="swagger-ui-wrap">
-    <a id="logo" href="http://swagger.io">swagger</a>
-    <form id='api_selector'>
-      <div class='input'><input placeholder="http://example.com/api" id="input_baseUrl" name="baseUrl" type="text"/></div>
-      <div class='input'><input placeholder="<%= @authentication_key %>" id="input_apiKey" name="apiKey" type="text"/></div>
-      <div class='input'><a id="explore" href="#">Explore</a></div>
-    </form>
-  </div>
-</div>
-
-<div id="message-bar" class="swagger-ui-wrap">&nbsp;</div>
-<div id="swagger-ui-container" class="swagger-ui-wrap"></div>
-</body>
+    <div id='message-bar' class='swagger-ui-wrap'>&nbsp;</div>
+    <div id='swagger-ui-container' class='swagger-ui-wrap'></div>
+  </body>
 </html>
