@@ -36,8 +36,8 @@ $(function () {
 
     var key = $('#input_apiKey')[0].value;
 
-    if(key && key.trim() != "") {
-      SwaggerUi.api.clientAuthorizations.add(
+    if(key && key.trim() != '') {
+      swaggerUi.api.clientAuthorizations.add(
         'key',
         new SwaggerClient.ApiKeyAuthorization(authenticationKey, key, authenticationType)
       );
