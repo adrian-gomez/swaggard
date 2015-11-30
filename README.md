@@ -175,6 +175,22 @@ You can configure it as follows:
 
 Even if you provide a authentication_value you can later change it from the ui.
 
+Documentation Scoping
+---------------------
+Its possible to only generate Swagger documentation for a subset of your application controllers
+to do this you just need to use the `controllers_path` config option.
+For instance to only generate documentation for the controllers under `app/controllers/api` you
+need do this:
+
+    # config/initializers/swaggard.rb
+    Swaggard.configure do |config|
+      ...
+      config.controllers_path = "#{Rails.root}/app/controllers/api/**/*.rb"
+      ...
+    end
+
+The default value for `controllers_path` is `"#{Rails.root}/app/controllers/**/*.rb"`.
+
 More Information
 -----------------
 
