@@ -175,6 +175,47 @@ You can configure it as follows:
 
 Even if you provide a authentication_value you can later change it from the ui.
 
+Access authorization
+--------------
+
+Swaggard supports access authorization.
+
+You can configure it as follows:
+
+    # config/initializers/swaggard.rb
+    Swaggard.configure do |config|
+      config.access_username  = 'admin'
+      config.access_password   = 'password'
+    end
+
+If you not set `access_username`, everyone will have access to Swagger documentation.
+
+Default content type
+--------------
+
+You can set default content type in Swaggard configuration as follows:
+
+    # config/initializers/swaggard.rb
+    Swaggard.configure do |config|
+      config.default_content_type = 'application/json'
+    end
+
+If you set `default_content_type`, Swagger will use it in example request.
+
+Caching
+--------------
+
+You can improve Swagger performance by using caching. You can enable `use_cache` in Swaggard configuration as follows:
+
+    # config/initializers/swaggard.rb
+    Swaggard.configure do |config|
+      config.use_cache = Rails.env.production?
+    end
+
+If you set `use_cache` as `Rails.env.production?`, Swagger will use cache only in production mode.
+
+Note. For cache clearing you can execute `rake swaggard:clear_cache`.
+
 Documentation Scoping
 ---------------------
 Its possible to only generate Swagger documentation for a subset of your application controllers
