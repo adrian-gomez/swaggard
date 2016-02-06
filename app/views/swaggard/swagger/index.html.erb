@@ -10,6 +10,10 @@
     <%= stylesheet_link_tag    'swaggard/application_print', media: :print %>
     <%= javascript_include_tag 'swaggard/application' %>
 
+    <%= javascript_tag do %>
+        window.default_content_type = '<%= Swaggard.configuration.default_content_type %>';
+    <% end %>
+
   </head>
 
   <body class='swagger-section'>

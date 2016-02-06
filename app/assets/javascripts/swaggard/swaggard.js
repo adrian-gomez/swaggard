@@ -21,6 +21,10 @@ $(function () {
       $('pre code').each(function(i, e) {
         hljs.highlightBlock(e)
       });
+
+      // set default content type
+      $('select[name="responseContentType"]').val(window.default_content_type);
+      $('select[name="parameterContentType"]').val(window.default_content_type);
     },
     onFailure: function(data) {
       log("Unable to Load SwaggerUI");
