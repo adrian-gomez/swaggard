@@ -17,7 +17,7 @@ module Swaggard
     attr_writer :swagger_version, :api_base_path, :api_version, :api_path, :api_formats, :title,
                 :description, :tos, :contact_email, :contact_name, :contact_url, :host,
                 :authentication_type, :authentication_key, :authentication_value,
-                :access_username, :access_password
+                :access_username, :access_password, :default_content_type
 
     def swagger_version
       @swagger_version ||= '2.0'
@@ -97,6 +97,10 @@ module Swaggard
 
     def access_password
       @access_password ||= ''
+    end
+
+    def default_content_type
+      @default_content_type ||= ''
     end
 
   end
