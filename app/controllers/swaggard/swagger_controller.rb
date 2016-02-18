@@ -14,9 +14,7 @@ module Swaggard
         end
 
         format.json do
-          doc = get_swaggard_doc
-
-          render json: doc
+          render json: get_swaggard_doc_json
         end
       end
     end
@@ -31,16 +29,16 @@ module Swaggard
       end
     end
 
-    def get_swaggard_doc
+    def get_swaggard_doc_json
       if Swaggard.configuration.use_cache
-        doc = Rails.cache.fetch('swagger_doc')
-        if doc.blank?
-          doc = Swaggard.get_doc(request.host_with_port)
-          Rails.cache.write('swagger_doc', doc)
+        doc_json = Rails.cache.fetch('swaggard_doc_json')
+        if doc_json.blank?
+          doc_json = Swaggard.get_doc(request.host_with_port).to_json
+          Rails.cache.write('swaggard_doc_json', doc_json)
         end
-        doc
+        doc_json
       else
-        Swaggard.get_doc(request.host_with_port)
+        Swaggard.get_doc(request.host_with_port).to_json
       end
     end
 
