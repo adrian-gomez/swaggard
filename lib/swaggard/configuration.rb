@@ -17,7 +17,7 @@ module Swaggard
     attr_writer :swagger_version, :api_base_path, :api_version, :api_path, :api_formats, :title,
                 :description, :tos, :contact_email, :contact_name, :contact_url, :host,
                 :authentication_type, :authentication_key, :authentication_value,
-                :access_username, :access_password, :default_content_type, :use_cache
+                :access_username, :access_password, :default_content_type, :use_cache, :module_name
 
     def swagger_version
       @swagger_version ||= '2.0'
@@ -105,6 +105,10 @@ module Swaggard
 
     def use_cache
       @use_cache ||= false
+    end
+
+    def module_name
+      @module_name ||= ''
     end
 
   end
