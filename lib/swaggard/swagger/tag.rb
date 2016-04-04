@@ -10,7 +10,7 @@ module Swaggard
         @yard_name = yard_object.name
 
         controller_name = "#{yard_object.namespace}::#{yard_object.name}"
-        controller_name.prepend("#{Swaggard.configuration.module_name}::") if !Swaggard.configuration.module_name.blank?
+        controller_name.prepend("#{Swaggard.configuration.module_name}::") unless Swaggard.configuration.module_name.blank?
 
         @controller_class = controller_name.constantize
 
