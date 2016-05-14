@@ -33,7 +33,10 @@ module Swaggard
       end
 
       def route_verb(route)
-        route.verb.source.gsub(/[$^]/, '')
+        route_getter = route.verb
+        route_getter = route_getter.source if Rails::VERSION::MAJOR < 5
+
+        route_getter.gsub(/[$^]/, '')
       end
 
       def route_path(route)

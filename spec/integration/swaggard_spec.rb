@@ -4,7 +4,7 @@ require 'json-schema'
 
 describe Swaggard, '.get_doc' do
 
-  let(:controller_path) { File.expand_path('../../fixtures/dummy/app/controllers/**/*.rb', __FILE__) }
+  let(:controller_path) { dummy_app_path.join('app', 'controllers', '**', '*.rb').to_path }
   let(:api_json)        { File.read(File.expand_path('../../fixtures/api.json', __FILE__)) }
 
   let(:host) { 'localhost:3000' }

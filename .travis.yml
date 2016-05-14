@@ -1,0 +1,33 @@
+rvm:
+  - 2.0
+  - 2.1
+  - 2.2.2
+
+script: "bundle exec rake spec"
+
+gemfile:
+  - gemfiles/4.2.gemfile
+  - gemfiles/5.0.gemfile
+
+matrix:
+  fast_finish: true
+  exclude:
+    - gemfile: gemfiles/4.2.gemfile
+    - gemfile: gemfiles/5.0.gemfile
+
+  include:
+    - gemfile: gemfiles/4.2.gemfile
+      rvm: 2.0
+      env: RAILS_MAJOR_VERSION=4 RAILS_MINOR_VERSION=2
+    - gemfile: gemfiles/4.2.gemfile
+      rvm: 2.1
+      env: RAILS_MAJOR_VERSION=4 RAILS_MINOR_VERSION=2
+    - gemfile: gemfiles/4.2.gemfile
+      rvm: 2.2.2
+      env: RAILS_MAJOR_VERSION=4 RAILS_MINOR_VERSION=2
+    - gemfile: gemfiles/5.0.gemfile
+      rvm: 2.2.2
+      env: RAILS_MAJOR_VERSION=5 RAILS_MINOR_VERSION=0
+
+sudo: false
+cache: bundler
