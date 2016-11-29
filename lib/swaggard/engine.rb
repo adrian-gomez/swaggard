@@ -20,5 +20,14 @@ module Swaggard
       Swaggard.register_custom_yard_tags!
     end
 
+    config.to_prepare do
+      Rails.application.config.assets.precompile += %w(
+        swaggard/application_print.css
+        swaggard/favicon-16x16.png
+        swaggard/favicon-32x32.png
+      )
+    end
+
+
   end
 end
