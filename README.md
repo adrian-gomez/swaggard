@@ -11,6 +11,7 @@ This table tracks the version of Swagger UI used on each Swaggard version:
 
 Swaggard Version | Swagger UI Version
 ---------------- | ------------------
+0.4.0            | 2.2.8
 0.3.0            | 2.1.3
 0.2.1            | 2.1.3
 0.2.0            | 2.1.3
