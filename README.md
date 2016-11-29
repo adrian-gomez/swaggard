@@ -3,9 +3,21 @@ Swaggard
 
 Swaggard is a Rails Engine that can be used to document a REST api. It does this by generating a
 json that is compliant with [Swagger](http://swagger.io) and displaying it using [Swagger-ui](https://github.com/wordnik/swagger-ui).
-This gem is inspired and based on [SwaggerYard](https://github.com/synctv/swagger_yard) by [Chris Trinh](https://github.com/chtrinh). 
- 
- 
+This gem is inspired and based on [SwaggerYard](https://github.com/synctv/swagger_yard) by [Chris Trinh](https://github.com/chtrinh).
+
+Swagger UI versions
+-----------------------
+This table tracks the version of Swagger UI used on each Swaggard version:
+
+Swaggard Version | Swagger UI Version
+---------------- | ------------------
+0.3.0            | 2.1.3
+0.2.1            | 2.1.3
+0.2.0            | 2.1.3
+0.1.1            | 2.1.3
+0.1.0            | 2.1.3
+0.0.4            | 2.1.8-M1
+
 Swaggard vs SwaggerYard
 -----------------------
 
@@ -22,7 +34,7 @@ And also:
 
 Installation
 ------------
-  
+
 Put Swaggard in your Gemfile:
 
     gem 'swaggard'
@@ -36,7 +48,7 @@ Getting Started
 -----------------
 
 Place your configuration in a your rails initializers
-    
+
     # config/initializers/swaggard.rb
 
     Swaggard.configure do |config|
@@ -190,6 +202,23 @@ You can configure it as follows:
 
 If you not set `access_username`, everyone will have access to Swagger documentation.
 
+
+Additional parameters
+--------------
+
+Swaggard additional parameters to be sent on every request, either as a header or as part of the query.
+
+You can configure it as follows:
+
+    # config/initializers/swaggard.rb
+    Swaggard.configure do |config|
+      config.additional_parameters = [{ key: 'TOKEN', type: 'header', value: '234' }]
+    end
+
+type can be 'header' or 'query'.
+If value is provided then it will be used as a default.
+You can change/set the value for the parameters in the ui.
+
 Default content type
 --------------
 
@@ -201,6 +230,33 @@ You can set default content type in Swaggard configuration as follows:
     end
 
 If you set `default_content_type`, Swagger will use it in example request.
+
+Language
+--------------
+
+You can set the language for SwaggerUI as follows:
+
+    # config/initializers/swaggard.rb
+    Swaggard.configure do |config|
+      config.language = 'es'
+    end
+
+The default value is: 'en'.
+Supported values are:
+- ca
+- el
+- en
+- es
+- fr
+- geo
+- it
+- ja
+- ko-kr
+- pl
+- pt
+- ru
+- tr
+- zh-cn
 
 Caching
 --------------

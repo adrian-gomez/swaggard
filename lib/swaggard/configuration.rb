@@ -3,12 +3,13 @@ module Swaggard
   # Configuration for Swagger Yard, use like:
   #
   #   Swaggard.configure do |config|
-  #     config.api_version          = '0.1'
-  #     config.doc_base_path        = 'http://swagger.example.com/doc'
-  #     config.api_base_path        = 'http://swagger.example.com/api'
-  #     config.authentication_type  = 'header'
-  #     config.authentication_key   = 'X-AUTHORIZATION'
-  #     config.authentication_value = 'you-secret-key'
+  #     config.api_version            = '0.1'
+  #     config.doc_base_path          = 'http://swagger.example.com/doc'
+  #     config.api_base_path          = 'http://swagger.example.com/api'
+  #     config.authentication_type    = 'header'
+  #     config.authentication_key     = 'X-AUTHORIZATION'
+  #     config.authentication_value   = 'you-secret-key'
+  #     config.additional_parameters  = [{ key: 'STORE-CODE', type: 'header', value: '1' }]
   #   end
   class Configuration
 
@@ -17,7 +18,8 @@ module Swaggard
     attr_writer :swagger_version, :api_base_path, :api_version, :api_path, :api_formats, :title,
                 :description, :tos, :contact_email, :contact_name, :contact_url, :host,
                 :authentication_type, :authentication_key, :authentication_value,
-                :access_username, :access_password, :default_content_type, :use_cache, :module_name
+                :access_username, :access_password, :default_content_type, :use_cache, :module_name,
+                :language, :additional_parameters
 
     def swagger_version
       @swagger_version ||= '2.0'
@@ -101,6 +103,14 @@ module Swaggard
 
     def default_content_type
       @default_content_type ||= ''
+    end
+
+    def language
+      @language ||= 'en'
+    end
+
+    def additional_parameters
+      @additional_parameters ||= []
     end
 
     def use_cache

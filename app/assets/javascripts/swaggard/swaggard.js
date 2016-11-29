@@ -1,8 +1,6 @@
 window.log = function(){
-  log.history = log.history || [];   // store logs to an array for reference
-  log.history.push(arguments);
-  if(this.console){
-    console.log( Array.prototype.slice.call(arguments) );
+  if ('console' in window) {
+    console.log.apply(console, arguments);
   }
 };
 
@@ -13,51 +11,62 @@ $(function () {
   } else {
     url = location.protocol + "//" + location.host + "/swagger.json";
   }
+
+  hljs.configure({
+    highlightSizeThreshold: 5000
+  });
+
+  if(window.SwaggerTranslator) {
+    window.SwaggerTranslator.translate();
+  }
+
   window.swaggerUi = new SwaggerUi({
     url: url,
     dom_id: "swagger-ui-container",
     supportedSubmitMethods: ['get', 'post', 'put', 'delete', 'patch'],
     onComplete: function(swaggerApi, swaggerUi){
-      $('pre code').each(function(i, e) {
-        hljs.highlightBlock(e)
-      });
+      if(window.SwaggerTranslator) {
+        window.SwaggerTranslator.translate();
+      }
 
       // set default content type
       $('select[name="responseContentType"]').val(window.default_content_type);
       $('select[name="parameterContentType"]').val(window.default_content_type);
+
+      $('.additional_parameter').each(function() {
+        updateParameter(this);
+      });
     },
     onFailure: function(data) {
       log("Unable to Load SwaggerUI");
     },
-    docExpansion: "none",
-    apisSorter : "alpha"
+    docExpansion: 'none',
+    jsonEditor: true,
+    defaultModelRendering: 'schema',
+    showRequestHeaders: true,
+    apisSorter : 'alpha'
   });
 
-  function addApiKeyAuthorization() {
-    var $apiSelectorForm = $('#api_selector');
-    var authenticationKey = $apiSelectorForm.data('authenticationKey');
-    var authenticationType = $apiSelectorForm.data('authenticationType');
+  function updateParameter(input) {
+    var $input = $(input);
 
-    var key = $('#input_apiKey')[0].value;
+    var parameterKey = $input.data('parameterKey');
+    var parameterType = $input.data('parameterType');
+    var value = $input.val();
 
-    if(key && key.trim() != '') {
+    if(value && value.trim() != '') {
       swaggerUi.api.clientAuthorizations.add(
-        'key',
-        new SwaggerClient.ApiKeyAuthorization(authenticationKey, key, authenticationType)
+        parameterKey,
+        new SwaggerClient.ApiKeyAuthorization(parameterKey, value, parameterType)
       );
+    } else {
+      swaggerUi.api.clientAuthorizations.remove(parameterKey);
     }
   }
 
-  var $apiKeyInput = $('#input_apiKey');
-
-  $apiKeyInput.change(function() {
-    addApiKeyAuthorization();
+  $('.additional_parameter').change(function() {
+    updateParameter(this);
   });
-
-  var $apiSelectorForm = $('api_selector');
-  var apiKey = $apiSelectorForm.data('authenticationValue');
-  $apiKeyInput.val(apiKey);
-  addApiKeyAuthorization();
 
   window.swaggerUi.load();
 });

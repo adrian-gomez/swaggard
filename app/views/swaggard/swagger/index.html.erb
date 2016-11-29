@@ -8,7 +8,9 @@
 
     <%= stylesheet_link_tag    'swaggard/application', media: :screen %>
     <%= stylesheet_link_tag    'swaggard/application_print', media: :print %>
+
     <%= javascript_include_tag 'swaggard/application' %>
+    <%= javascript_include_tag "swaggard/lang/#{Swaggard.configuration.language}" %>
 
     <%= javascript_tag do %>
         window.default_content_type = '<%= Swaggard.configuration.default_content_type %>';
@@ -19,19 +21,42 @@
   <body class='swagger-section'>
     <div id='header'>
       <div class='swagger-ui-wrap'>
-        <a id='logo' href='http://swagger.io'>swagger</a>
-        <%= form_tag '', id: :api_selector, data: { authentication_key: @authentication_key,
-                                                    authentication_type: @authentication_type,
-                                                    authentication_value: @authentication_value} do %>
-          <div class='input'><input placeholder='http://example.com/api' id='input_baseUrl' name='baseUrl' type='text'/></div>
-          <div class='input'><input placeholder='<%= @authentication_key %>' id='input_apiKey' name='apiKey' type='text'/></div>
-          <div class='input'><a id='explore' href='#'>Explore</a></div>
-        <% end %>
+        <a id='logo' href='http://swagger.io'>
+          <%= image_tag 'swaggard/logo_small.png', class: 'logo__img', alt: 'swagger', height: 30, width: 30 %>
+          <span class='logo__title'>swagger</span>
+        </a>
+        <%= form_tag '', id: :api_selector do %>
 
+          <div>
+            <div class='input'><input placeholder='http://example.com/api' id='input_baseUrl' name='baseUrl' type='text'/></div>
+
+            <div class='input'>
+              <input class='additional_parameter' data-parameter-key='<%= @authentication_key %>'
+                                                  data-parameter-type='<%= @authentication_type %>'
+                                                  placeholder='<%= @authentication_key %>'
+                                                  type='text'
+                                                  value='<%= @authentication_value %>'/>
+              </div>
+
+            <div class='input'><a id='explore' class='header__btn' href='#' data-sw-translate>Explore</a></div>
+          </div>
+          <% Swaggard.configuration.additional_parameters.each do |additional_parameter|%>
+            <div class='input'>
+              <input class='additional_parameter' data-parameter-key='<%= additional_parameter[:key] %>'
+                                                  data-parameter-type='<%= additional_parameter[:type] %>'
+                                                  placeholder='<%= additional_parameter[:key] %>'
+                                                  type='text'
+                                                  value='<%= additional_parameter[:value] %>'/>
+              </div>
+          <% end %>
+          <div id='auth_container'></div>
+        <% end %>
+        <br>
+        <br>
       </div>
     </div>
 
-    <div id='message-bar' class='swagger-ui-wrap'>&nbsp;</div>
+    <div id='message-bar' class='swagger-ui-wrap' data-sw-translate>&nbsp;</div>
     <div id='swagger-ui-container' class='swagger-ui-wrap'></div>
   </body>
 </html>
