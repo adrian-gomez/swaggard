@@ -33,7 +33,10 @@ module Swaggard
       end
 
       def route_verb(route)
-        route.verb.source.gsub(/[$^]/, '')
+        verb = route.verb
+        verb = route.verb.source unless verb.is_a?(String)
+
+        verb.gsub(/[$^]/, '')
       end
 
       def route_path(route)
