@@ -11,6 +11,7 @@ the supported rails version.
 
 Swaggard Version | Swagger UI Version | Supported Rails Versions
 ---------------- | -------------------| ------------------------
+0.5.0            | 2.2.8              | 4 - 5
 0.4.0            | 2.2.8              | 4
 0.3.0            | 2.1.3              | 4
 0.2.1            | 2.1.3              | 4
