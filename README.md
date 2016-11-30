@@ -1,23 +1,23 @@
 Swaggard
 ========
 
-Swaggard is a Rails Engine that can be used to document a REST api. It does this by generating a
-json that is compliant with [Swagger](http://swagger.io) and displaying it using [Swagger-ui](https://github.com/wordnik/swagger-ui).
+Swaggard is a Rails Engine that can be used to document a REST api. It does this by generating a json that is compliant with [Swagger](http://swagger.io) and displaying it using [Swagger-ui](https://github.com/wordnik/swagger-ui).
 This gem is inspired and based on [SwaggerYard](https://github.com/synctv/swagger_yard) by [Chris Trinh](https://github.com/chtrinh).
 
-Swagger UI versions
------------------------
-This table tracks the version of Swagger UI used on each Swaggard version:
+Compatibility
+-------------
+This table tracks the version of Swagger UI used on each Swaggard version and
+the supported rails version.
 
-Swaggard Version | Swagger UI Version
----------------- | ------------------
-0.4.0            | 2.2.8
-0.3.0            | 2.1.3
-0.2.1            | 2.1.3
-0.2.0            | 2.1.3
-0.1.1            | 2.1.3
-0.1.0            | 2.1.3
-0.0.4            | 2.1.8-M1
+Swaggard Version | Swagger UI Version | Supported Rails Versions
+---------------- | -------------------| ------------------------
+0.4.0            | 2.2.8              | 4
+0.3.0            | 2.1.3              | 4
+0.2.1            | 2.1.3              | 4
+0.2.0            | 2.1.3              | 4
+0.1.1            | 2.1.3              | 4
+0.1.0            | 2.1.3              | 4
+0.0.4            | 2.1.8-M1           | 4
 
 Swaggard vs SwaggerYard
 -----------------------
@@ -207,7 +207,7 @@ If you not set `access_username`, everyone will have access to Swagger documenta
 Additional parameters
 --------------
 
-Swaggard additional parameters to be sent on every request, either as a header or as part of the query.
+Swaggard supports additional parameters to be sent on every request, either as a header or as part of the query.
 
 You can configure it as follows:
 
