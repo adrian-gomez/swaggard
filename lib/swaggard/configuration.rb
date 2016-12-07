@@ -19,7 +19,7 @@ module Swaggard
                 :description, :tos, :contact_email, :contact_name, :contact_url, :host,
                 :authentication_type, :authentication_key, :authentication_value,
                 :access_username, :access_password, :default_content_type, :use_cache, :module_name,
-                :language, :additional_parameters
+                :language, :additional_parameters, :schemes
 
     def swagger_version
       @swagger_version ||= '2.0'
