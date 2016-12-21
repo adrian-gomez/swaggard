@@ -8,7 +8,9 @@ module Swaggard
         format.html do
           @authentication_type = Swaggard.configuration.authentication_type
           @authentication_key = Swaggard.configuration.authentication_key
-          @authentication_value = Swaggard.configuration.authentication_value
+          @authentication_value = Swaggard.configuration.authentication_value.respond_to?(:call) ?
+                                    Swaggard.configuration.authentication_value.call :
+                                    Swaggard.configuration.authentication_value
 
           render :index, layout: false
         end
