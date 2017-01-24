@@ -37,7 +37,7 @@ module Swaggard
           when 'parameter_list'
             @parameters << Parameters::List.new(value)
           when 'response_class'
-            @responses << Response.new(200, value)
+            @responses << Response.new(value)
           end
         end
 

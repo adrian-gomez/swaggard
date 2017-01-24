@@ -6,8 +6,8 @@ module Swaggard
 
       attr_reader :status_code
 
-      def initialize(status_code, value)
-        @status_code = status_code
+      def initialize(value)
+        @status_code = 200
         parse(value)
       end
 
@@ -21,12 +21,16 @@ module Swaggard
       private
 
       def parse(value)
+        value, status_code = value.split(/\s/)
+
         @is_array_response = value =~ /Array/
         @response_class = if @is_array_response
                             value.match(/^Array<(.*)>$/)[1]
                           else
                             value
                           end
+
+        @status_code = status_code.to_i if status_code
       end
 
       def response_model
