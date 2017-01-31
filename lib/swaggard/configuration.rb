@@ -5,7 +5,7 @@ module Swaggard
   #   Swaggard.configure do |config|
   #     config.api_version            = '0.1'
   #     config.doc_base_path          = 'http://swagger.example.com/doc'
-  #     config.api_base_path          = 'http://swagger.example.com/api'
+  #     config.api_base_path          = '/api'
   #     config.authentication_type    = 'header'
   #     config.authentication_key     = 'X-AUTHORIZATION'
   #     config.authentication_value   = 'you-secret-key'
