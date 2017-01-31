@@ -55,7 +55,6 @@ Place your configuration in a your rails initializers
 
     Swaggard.configure do |config|
       config.api_version = '0.1'
-      config.doc_base_path = 'http://swagger.example.com/doc'
       config.api_base_path = '/api' # The base path on which the API is served, which is relative to the host. If it is not included, the API is served directly under the host. The value MUST start with a leading slash (/).
     end
 
