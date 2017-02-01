@@ -9,7 +9,7 @@ $(function () {
   if (url && url.length > 1) {
     url = decodeURIComponent(url[1]);
   } else {
-    url = location.protocol + "//" + location.host + "/swagger.json";
+    url = location.protocol + "//" + location.host + location.pathname.replace(/\/$/, "") + ".json";
   }
 
   hljs.configure({
