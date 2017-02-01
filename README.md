@@ -62,16 +62,16 @@ Mount your engine
 
 	# config/routes.rb
 
-	mount Swaggard::Engine, at: '/swagger'
+	mount Swaggard::Engine, at: '/api_docs/swagger/'
 
 Access your service documentation
 
-	open http://localhost:3000/swagger
+	open http://localhost:3000/api_docs/swagger/
 
 
 Access the raw swagger json
 
-	open http://localhost:3000/swagger.json
+	open http://localhost:3000/api_docs/swagger.json
 
 Example
 -------
