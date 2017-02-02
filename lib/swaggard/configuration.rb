@@ -45,7 +45,7 @@ module Swaggard
     end
 
     def schemes
-      @schemes ||= [:http]
+      @schemes ||= [:https, :http]
     end
 
     def title
