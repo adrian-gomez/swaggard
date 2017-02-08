@@ -1,41 +1,25 @@
-Swaggard
-========
+# Swaggard
 
 Swaggard is a Rails Engine that can be used to document a REST api. It does this by generating a json that is compliant with [Swagger](http://swagger.io) and displaying it using [Swagger-ui](https://github.com/wordnik/swagger-ui).
 This gem is inspired and based on [SwaggerYard](https://github.com/synctv/swagger_yard) by [Chris Trinh](https://github.com/chtrinh).
 
-Compatibility
--------------
+
+## Compatibility
+
 This table tracks the version of Swagger UI used on each Swaggard version and
 the supported rails version.
 
-Swaggard Version | Swagger UI Version | Supported Rails Versions
----------------- | -------------------| ------------------------
-0.5.0            | 2.2.8              | 4 - 5
-0.4.0            | 2.2.8              | 4
-0.3.0            | 2.1.3              | 4
-0.2.1            | 2.1.3              | 4
-0.2.0            | 2.1.3              | 4
-0.1.1            | 2.1.3              | 4
-0.1.0            | 2.1.3              | 4
-0.0.4            | 2.1.8-M1           | 4
-
-Swaggard vs SwaggerYard
------------------------
-
-The main reason this gem exists is to avoid having to write by hand some information and use what
-rails already give us ie: controllers names and methods paths.
-
-And also:
-  - Bring support for Rails 4.
-  - Bring support for Swagger 2.
-  - Bring support for models (serializers).
-  - Bring support for form and body params.
-  - and more...
+Swaggard Version | Swagger UI Version  | Supported Rails Versions
+---------------- | ------------------- | ------------------------
+0.5.x            | 2.2.8               | 4 - 5
+0.4.x            | 2.2.8               | 4
+0.3.x            | 2.1.3               | 4
+0.2.x            | 2.1.3               | 4
+0.1.x            | 2.1.3               | 4
+0.0.x            | 2.1.8-M1            | 4
 
 
-Installation
-------------
+## Installation
 
 Put Swaggard in your Gemfile:
 
@@ -46,8 +30,7 @@ Install the gem with Bundler:
     bundle install
 
 
-Getting Started
------------------
+## Getting Started
 
 Place your configuration in a your rails initializers
 
@@ -74,8 +57,8 @@ Access the raw swagger json
 
 	open http://localhost:3000/swagger.json
 
-Example
--------
+
+## Example
 
 By just using Swaggard you'll get documentation for the endpoints that exist on your service:
 http method, path, path params. And grouping will be done based on the controller that holds
@@ -86,15 +69,23 @@ of the expected inputs and outputs or even change the grouping of the endpoints.
 
 Here is a example of how to use Swaggard
 
+    # config/routes.rb
+
+    resources :users, only: [] do
+      resources :posts, controller: 'users/posts', only: [:index, :create]
+    end
+
+
     # app/controllers/users/posts_controller.rb
 
-    # User posts
-    #
+    # @tag UsersPosts
     # API for creating, deleting, and listing user posts.
-    class User::PostsController < ActionController::Base
+    class Users::PostsController < ActionController::Base
 
       # Returns the list of user posts
       #
+      # @response_status 201
+      # @response_root posts
       # @response_class Array<PostSerializer>
       def index
         ...
@@ -155,10 +146,26 @@ Will generate
 ![Web UI](https://raw.githubusercontent.com/Moove-it/swaggard/master/example/web-ui.png)
 
 
-Primitive type
---------------
-When one of this types is given Swaggard will handle them directly instead of searching for
-a definition:
+## Available tags
+
+### Controllers
+
+- `@tag name` This is used to indicate under what `name` tag this controller needs to be grouped. If not provided it will use the full controller class name.
+- `@query_parameter [type] name` This is used to indicate that your action receives the `name` parameter of `type` on the query string.
+- `@body_parameter [type] name` This is used to indicate that your action receives the `name` parameter of `type` on the body.
+- `@response_class type` This is used to indicate that your action returns a response of `type`.
+- `@response_status 200` This is used to indicate the response code of your action when everything goes well.
+- `@response_root name` This is used to indicate that your action returns its response inside a root key element `name`. If not provided the root is omitted and the response its returned directly.
+- `@form_parameter`
+- `@parameter_list`
+
+### Models
+
+- `@attr [type] name` This is used to indicate that your models has an attribute `name` of `type`.
+
+## Primitives
+
+When one of these types is given Swaggard will handle them directly instead of searching for a definition:
 
 - integer
 - long
@@ -173,8 +180,8 @@ a definition:
 - password
 - hash
 
-Authentication
---------------
+
+## Authentication
 
 Swaggard supports two types of authentication: header and query.
 
@@ -189,8 +196,8 @@ You can configure it as follows:
 
 Even if you provide a authentication_value you can later change it from the ui.
 
-Access authorization
---------------
+
+## Access authorization
 
 Swaggard supports access authorization.
 
@@ -205,8 +212,7 @@ You can configure it as follows:
 If you not set `access_username`, everyone will have access to Swagger documentation.
 
 
-Additional parameters
---------------
+## Additional parameters
 
 Swaggard supports additional parameters to be sent on every request, either as a header or as part of the query.
 
@@ -221,8 +227,8 @@ type can be 'header' or 'query'.
 If value is provided then it will be used as a default.
 You can change/set the value for the parameters in the ui.
 
-Default content type
---------------
+
+## Default content type
 
 You can set default content type in Swaggard configuration as follows:
 
@@ -233,8 +239,8 @@ You can set default content type in Swaggard configuration as follows:
 
 If you set `default_content_type`, Swagger will use it in example request.
 
-Language
---------------
+
+## Language
 
 You can set the language for SwaggerUI as follows:
 
@@ -260,8 +266,8 @@ Supported values are:
 - tr
 - zh-cn
 
-Caching
---------------
+
+## Caching
 
 You can improve Swagger performance by using caching. You can enable `use_cache` in Swaggard configuration as follows:
 
@@ -274,8 +280,9 @@ If you set `use_cache` as `Rails.env.production?`, Swagger will use cache only i
 
 Note. For cache clearing you can execute `rake swaggard:clear_cache`.
 
-Documentation Scoping
----------------------
+
+## Documentation Scoping
+
 Its possible to only generate Swagger documentation for a subset of your application controllers
 to do this you just need to use the `controllers_path` config option.
 For instance to only generate documentation for the controllers under `app/controllers/api` you
@@ -290,22 +297,20 @@ need do this:
 
 The default value for `controllers_path` is `"#{Rails.root}/app/controllers/**/*.rb"`.
 
-More Information
------------------
+
+## More Information
 
 - [Swagger](http://swagger.io)
 - [Swagger-ui](https://github.com/wordnik/swagger-ui)
 - [Yard](https://github.com/lsegal/yard)
 
 
-Author
-------
+## Author
 
 [Adrian Gomez](https://github.com/adrian-gomez)
 
 
-Credits
--------
+## Credits
 
 [Chris Trinh](https://github.com/chtrinh) author of [SwaggerYard](https://github.com/synctv/swagger_yard) in which this gem is
 inspired and used a base.

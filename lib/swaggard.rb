@@ -28,6 +28,8 @@ module Swaggard
       ::YARD::Tags::Library.define_tag('Body parameter',  :body_parameter)
       ::YARD::Tags::Library.define_tag('Parameter list',  :parameter_list)
       ::YARD::Tags::Library.define_tag('Response class',  :response_class)
+      ::YARD::Tags::Library.define_tag('Response Root',  :response_root)
+      ::YARD::Tags::Library.define_tag('Response Status',  :response_status)
     end
 
     def get_doc(host)

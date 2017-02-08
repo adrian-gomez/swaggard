@@ -5,7 +5,6 @@ require_relative 'parameters/path'
 require_relative 'parameters/query'
 
 require_relative 'response'
-require_relative 'default_response'
 
 module Swaggard
   module Swagger
@@ -37,7 +36,11 @@ module Swaggard
           when 'parameter_list'
             @parameters << Parameters::List.new(value)
           when 'response_class'
-            @responses << Response.new(200, value)
+            success_response.response_class = value
+          when 'response_status'
+            success_response.status_code = value
+          when 'response_root'
+            success_response.response_root = value
           end
         end
 
@@ -45,7 +48,7 @@ module Swaggard
 
         @parameters.sort_by { |parameter| parameter.name }
 
-        @responses << DefaultResponse.new unless @responses.any?
+        @responses << success_response
       end
 
       def valid?
@@ -69,10 +72,16 @@ module Swaggard
       end
 
       def definitions
-        @body_parameter ? [@body_parameter.definition] : []
+        @responses.map(&:definition).compact.tap do |definitions|
+          definitions << @body_parameter.definition if @body_parameter
+        end
       end
 
       private
+
+      def success_response
+        @success_response ||= Response.new("#{@tag.controller_class.to_s}.#{@name}")
+      end
 
       def body_parameter
         return @body_parameter if @body_parameter
