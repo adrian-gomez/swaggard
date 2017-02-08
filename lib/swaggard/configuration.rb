@@ -4,8 +4,7 @@ module Swaggard
   #
   #   Swaggard.configure do |config|
   #     config.api_version            = '0.1'
-  #     config.doc_base_path          = 'http://swagger.example.com/doc'
-  #     config.api_base_path          = 'http://swagger.example.com/api'
+  #     config.api_base_path          = '/api'
   #     config.authentication_type    = 'header'
   #     config.authentication_key     = 'X-AUTHORIZATION'
   #     config.authentication_value   = 'you-secret-key'
@@ -13,7 +12,7 @@ module Swaggard
   #   end
   class Configuration
 
-    attr_accessor :doc_base_path, :controllers_path, :models_paths, :routes
+    attr_accessor :controllers_path, :models_paths, :routes
 
     attr_writer :swagger_version, :api_base_path, :api_version, :api_path, :api_formats, :title,
                 :description, :tos, :contact_email, :contact_name, :contact_url, :host,
@@ -46,7 +45,7 @@ module Swaggard
     end
 
     def schemes
-      @schemes ||= [:http]
+      @schemes ||= [:https, :http]
     end
 
     def title
