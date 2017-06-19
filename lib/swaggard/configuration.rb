@@ -18,7 +18,7 @@ module Swaggard
                 :description, :tos, :contact_email, :contact_name, :contact_url, :host,
                 :authentication_type, :authentication_key, :authentication_value,
                 :access_username, :access_password, :default_content_type, :use_cache, :module_name,
-                :language, :additional_parameters, :schemes
+                :language, :additional_parameters, :schemes, :security_definitions, :security
 
     def swagger_version
       @swagger_version ||= '2.0'
@@ -118,6 +118,14 @@ module Swaggard
 
     def module_name
       @module_name ||= ''
+    end
+
+    def security_definitions
+      @security_definitions ||= nil
+    end
+
+    def security
+      @security ||= nil
     end
 
   end

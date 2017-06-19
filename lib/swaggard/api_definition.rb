@@ -41,6 +41,8 @@ module Swaggard
             'url'   => Swaggard.configuration.license_url
           }
         },
+        'securityDefinitions' => Swaggard.configuration.security_definitions,
+        'security'    => Swaggard.configuration.security,
         'host'        => Swaggard.configuration.host,
         'basePath'    => Swaggard.configuration.api_base_path,
         'tags'        => @tags.map { |_, tag| tag.to_doc },
