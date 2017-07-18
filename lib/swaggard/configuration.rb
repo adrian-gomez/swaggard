@@ -14,10 +14,10 @@ module Swaggard
 
     attr_accessor :controllers_path, :models_paths, :routes
 
-    attr_writer :swagger_version, :api_base_path, :api_version, :api_path, :api_formats, :title,
+    attr_writer :swagger_version, :api_base_path, :api_version, :api_formats, :title,
                 :description, :tos, :contact_email, :contact_name, :contact_url, :host,
                 :authentication_type, :authentication_key, :authentication_value,
-                :access_username, :access_password, :default_content_type, :use_cache, :module_name,
+                :access_username, :access_password, :default_content_type, :use_cache,
                 :language, :additional_parameters, :schemes
 
     def swagger_version
@@ -26,10 +26,6 @@ module Swaggard
 
     def api_version
       @api_version ||= '0.1'
-    end
-
-    def api_path
-      @api_path ||= ''
     end
 
     def api_base_path
@@ -114,10 +110,6 @@ module Swaggard
 
     def use_cache
       @use_cache ||= false
-    end
-
-    def module_name
-      @module_name ||= ''
     end
 
   end
