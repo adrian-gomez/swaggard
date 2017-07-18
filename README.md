@@ -29,17 +29,13 @@ Install the gem with Bundler:
 
     bundle install
 
-
 ## Getting Started
 
-Place your configuration in a your rails initializers
+First generate a Swaggard configuration initializer file.
 
-    # config/initializers/swaggard.rb
+    rails g swaggard:install
 
-    Swaggard.configure do |config|
-      config.api_version = '0.1'
-      config.api_base_path = '/api' # The base path on which the API is served, which is relative to the host. If it is not included, the API is served directly under the host. The value MUST start with a leading slash (/).
-    end
+This will install the file `swaggard.rb` to your Rails `config/initializers` directory which you can then alter the config.
 
 Mount your engine
 
