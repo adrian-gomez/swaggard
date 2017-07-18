@@ -26,9 +26,6 @@ Swaggard.configure do |config|
   # Specify the API formats.
   # config.api_formats = [:xml, :json]
 
-  # TODO: Add note about what this is for...
-  # config.api_path = ""
-
   #  The version of the application API.
   # config.api_version = "0.1"
 
@@ -79,9 +76,6 @@ Swaggard.configure do |config|
 
   # Specify one or more paths to look for your model documentation
   # config.models_paths = ["#{app.root}/app/serializers/**/*.rb"]
-
-  # TODO: Add note about what this is for...
-  # config.module_name = ""
 
   # The transfer protocol of the API.
   # Values MUST be from the list: "http", "https", "ws", "wss"
