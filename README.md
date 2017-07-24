@@ -23,35 +23,43 @@ Swaggard Version | Swagger UI Version  | Supported Rails Versions
 
 Put Swaggard in your Gemfile:
 
-    gem 'swaggard'
+```ruby
+gem 'swaggard'
+```
 
 Install the gem with Bundler:
 
-    bundle install
+```sh
+bundle install
+```
 
 ## Getting Started
 
 First generate a Swaggard configuration initializer file.
 
-    rails g swaggard:install
+```sh
+rails g swaggard:install
+```
 
 This will install the file `swaggard.rb` to your Rails `config/initializers` directory which you can then alter the config.
 
-Mount your engine
+Mount your engine in `config/routes.rb`.
 
-	# config/routes.rb
+```ruby
+mount Swaggard::Engine, at: '/api_docs/swagger/'
+```
 
-	mount Swaggard::Engine, at: '/api_docs/swagger/'
+Access your service documentation.
 
-Access your service documentation
+```sh
+open http://localhost:3000/api_docs/swagger/
+```
 
-	open http://localhost:3000/api_docs/swagger/
+Access the raw swagger JSON.
 
-
-Access the raw swagger json
-
-	open http://localhost:3000/api_docs/swagger.json
-
+```sh
+open http://localhost:3000/api_docs/swagger.json
+```
 
 ## Example
 
@@ -62,84 +70,88 @@ each path.
 This is fine base but you should add more documentation in order to provide more information
 of the expected inputs and outputs or even change the grouping of the endpoints.
 
-Here is a example of how to use Swaggard
+Here is a example of how to use Swaggard.
 
-    # config/routes.rb
+`config/routes.rb`
 
-    resources :users, only: [] do
-      resources :posts, controller: 'users/posts', only: [:index, :create]
-    end
+```ruby
+resources :users, only: [] do
+  resources :posts, controller: 'users/posts', only: [:index, :create]
+end
+```
 
+`app/controllers/users/posts_controller.rb`
 
-    # app/controllers/users/posts_controller.rb
+```ruby
+# @tag UsersPosts
+# API for creating, deleting, and listing user posts.
+class Users::PostsController < ActionController::Base
 
-    # @tag UsersPosts
-    # API for creating, deleting, and listing user posts.
-    class Users::PostsController < ActionController::Base
+  # Returns the list of user posts
+  #
+  # @response_status 201
+  # @response_root posts
+  # @response_class Array<PostSerializer>
+  def index
+    ...
+  end
 
-      # Returns the list of user posts
-      #
-      # @response_status 201
-      # @response_root posts
-      # @response_class Array<PostSerializer>
-      def index
-        ...
-      end
+  # Create user post
+  #
+  # @body_parameter [string] title
+  # @body_parameter [string] body
+  # @body_parameter [string] topic_id
+  #
+  # @response_class PostSerializer
+  def create
+    ...
+  end
 
-      # Create user post
-      #
-      # @body_parameter [string] title
-      # @body_parameter [string] body
-      # @body_parameter [string] topic_id
-      #
-      # @response_class PostSerializer
-      def create
-        ...
-      end
+end
+```
 
-    end
+`app/serializers/post_serializer.rb`
 
+```ruby
+# @attr [integer] id
+# @attr [string] title
+# @attr [string] body
+# @attr [date-time] created_at
+# @attr [date-time] updated_at
+# @attr [TopicSerializer] topic
+class PostSerializer < ActiveModel::Serializer
 
-    # app/serializers/post_serializer.rb
+  attribute :id
+  attribute :title
+  attribute :body
+  attribute :created_at
+  attribute :updated_at
 
-    # @attr [integer] id
-    # @attr [string] title
-    # @attr [string] body
-    # @attr [date-time] created_at
-    # @attr [date-time] updated_at
-    # @attr [TopicSerializer] topic
-    class PostSerializer < ActiveModel::Serializer
+  has_one :topic, serializer: TopicSerializer
 
-      attribute :id
-      attribute :title
-      attribute :body
-      attribute :created_at
-      attribute :updated_at
+end
+```
 
-      has_one :topic, serializer: TopicSerializer
+`app/serializers/topic_serializer.rb`
 
-    end
+```ruby
+# @attr [integer] id
+# @attr [string] name
+# @attr [date-time] created_at
+# @attr [date-time] updated_at
+class TopicSerializer < ActiveModel::Serializer
 
+  attribute :id
+  attribute :name
+  attribute :created_at
+  attribute :updated_at
 
-    # app/serializers/topic_serializer.rb
+end
+```
 
-    # @attr [integer] id
-    # @attr [string] name
-    # @attr [date-time] created_at
-    # @attr [date-time] updated_at
-    class TopicSerializer < ActiveModel::Serializer
-
-      attribute :id
-      attribute :name
-      attribute :created_at
-      attribute :updated_at
-
-    end
-
-Will generate
+Put this altogether and you generate...
 
 ![Web UI](https://raw.githubusercontent.com/Moove-it/swaggard/master/example/web-ui.png)
-
 
 ## Available tags
 
@@ -158,23 +170,51 @@ Will generate
 
 - `@attr [type] name` This is used to indicate that your models has an attribute `name` of `type`.
 
-## Primitives
+## Data Types
 
-When one of these types is given Swaggard will handle them directly instead of searching for a definition:
+### Primitive Data Types
 
-- integer
-- long
-- float
-- double
-- string
-- byte
+When one of these basic types is given Swaggard will handle them directly instead of searching for a definition:
+
 - binary
 - boolean
+- byte
 - date
 - date-time
-- password
+- double
+- float
 - hash
+- integer
+- long
+- password
+- string
 
+### Custom Data Types
+
+It is possible to set custom data types for your definitions in the Swaggard config.
+
+```ruby
+# config/initializers/swaggard.rb
+Swaggard.configure do |config|
+  config.custom_data_types = {
+    'uuid'  => { 'type' => 'string',  'format' => 'uuid' }
+  }
+end
+```
+
+This allows you to then specify a `uuid` in your controllers and serializers.
+
+```ruby
+# @attr [date-time] created_at
+# @attr [uuid] id
+# @attr [string] name
+# @attr [date-time] updated_at
+class UserSerializer < ActiveModel::Serializer
+```
+
+The `type` must be one of the primitive data types listed above.
+
+The `format`, if supplied, should be supported by Swagger. However the specs state "_Formats such as "email", "uuid", etc., can be used even though they are not defined by this specification. Types that are not accompanied by a format property follow their definition from the JSON Schema (except for file type which is defined above)_" so you can use the above example to set a UUID data type but it will display in the Swagger UI as `string` rather that as `uuid`. See [here](https://swagger.io/specification/#data-types-12) for more info.
 
 ## Authentication
 
@@ -182,15 +222,16 @@ Swaggard supports two types of authentication: header and query.
 
 You can configure it as follows:
 
-    # config/initializers/swaggard.rb
-    Swaggard.configure do |config|
-      config.authentication_type  = 'header' # Defaults to 'query'
-      config.authentication_key   = 'X-AUTH-TOKEN' # Defaults to 'api_key'
-      config.authentication_value = 'your-secret-key' # Initial value for authentication. Defaults to ''
-    end
+```ruby
+# config/initializers/swaggard.rb
+Swaggard.configure do |config|
+  config.authentication_type  = 'header' # Defaults to 'query'
+  config.authentication_key   = 'X-AUTH-TOKEN' # Defaults to 'api_key'
+  config.authentication_value = 'your-secret-key' # Initial value for authentication. Defaults to ''
+end
+```
 
 Even if you provide a authentication_value you can later change it from the ui.
-
 
 ## Access authorization
 
@@ -198,14 +239,15 @@ Swaggard supports access authorization.
 
 You can configure it as follows:
 
-    # config/initializers/swaggard.rb
-    Swaggard.configure do |config|
-      config.access_username  = 'admin'
-      config.access_password   = 'password'
-    end
+```ruby
+# config/initializers/swaggard.rb
+Swaggard.configure do |config|
+  config.access_username  = 'admin'
+  config.access_password   = 'password'
+end
+```
 
 If you not set `access_username`, everyone will have access to Swagger documentation.
-
 
 ## Additional parameters
 
@@ -213,38 +255,43 @@ Swaggard supports additional parameters to be sent on every request, either as a
 
 You can configure it as follows:
 
-    # config/initializers/swaggard.rb
-    Swaggard.configure do |config|
-      config.additional_parameters = [{ key: 'TOKEN', type: 'header', value: '234' }]
-    end
+```ruby
+# config/initializers/swaggard.rb
+Swaggard.configure do |config|
+  config.additional_parameters = [{ key: 'TOKEN', type: 'header', value: '234' }]
+end
+```
 
-type can be 'header' or 'query'.
-If value is provided then it will be used as a default.
-You can change/set the value for the parameters in the ui.
+The `type` can be either 'header' or 'query'.
 
+If a value is provided then it will be used as a default. You can change/set the value for the parameters in the ui.
 
 ## Default content type
 
 You can set default content type in Swaggard configuration as follows:
 
-    # config/initializers/swaggard.rb
-    Swaggard.configure do |config|
-      config.default_content_type = 'application/json'
-    end
+```ruby
+# config/initializers/swaggard.rb
+Swaggard.configure do |config|
+  config.default_content_type = 'application/json'
+end
+```
 
 If you set `default_content_type`, Swagger will use it in example request.
-
 
 ## Language
 
 You can set the language for SwaggerUI as follows:
 
-    # config/initializers/swaggard.rb
-    Swaggard.configure do |config|
-      config.language = 'es'
-    end
+```ruby
+# config/initializers/swaggard.rb
+Swaggard.configure do |config|
+  config.language = 'es'
+end
+```
 
 The default value is: 'en'.
+
 Supported values are:
 - ca
 - el
@@ -261,37 +308,37 @@ Supported values are:
 - tr
 - zh-cn
 
-
 ## Caching
 
 You can improve Swagger performance by using caching. You can enable `use_cache` in Swaggard configuration as follows:
 
-    # config/initializers/swaggard.rb
-    Swaggard.configure do |config|
-      config.use_cache = Rails.env.production?
-    end
+```ruby
+# config/initializers/swaggard.rb
+Swaggard.configure do |config|
+  config.use_cache = Rails.env.production?
+end
+```
 
 If you set `use_cache` as `Rails.env.production?`, Swagger will use cache only in production mode.
 
 Note. For cache clearing you can execute `rake swaggard:clear_cache`.
 
-
 ## Documentation Scoping
 
-Its possible to only generate Swagger documentation for a subset of your application controllers
-to do this you just need to use the `controllers_path` config option.
-For instance to only generate documentation for the controllers under `app/controllers/api` you
-need do this:
+Its possible to only generate Swagger documentation for a subset of your application controllers to do this you just need to use the `controllers_path` config option.
 
-    # config/initializers/swaggard.rb
-    Swaggard.configure do |config|
-      ...
-      config.controllers_path = "#{Rails.root}/app/controllers/api/**/*.rb"
-      ...
-    end
+For instance to only generate documentation for the controllers under `app/controllers/api` you need do this:
+
+```ruby
+# config/initializers/swaggard.rb
+Swaggard.configure do |config|
+  ...
+  config.controllers_path = "#{Rails.root}/app/controllers/api/**/*.rb"
+  ...
+end
+```
 
 The default value for `controllers_path` is `"#{Rails.root}/app/controllers/**/*.rb"`.
-
 
 ## More Information
 
@@ -299,13 +346,10 @@ The default value for `controllers_path` is `"#{Rails.root}/app/controllers/**/*
 - [Swagger-ui](https://github.com/wordnik/swagger-ui)
 - [Yard](https://github.com/lsegal/yard)
 
-
 ## Author
 
 [Adrian Gomez](https://github.com/adrian-gomez)
 
-
 ## Credits
 
-[Chris Trinh](https://github.com/chtrinh) author of [SwaggerYard](https://github.com/synctv/swagger_yard) in which this gem is
-inspired and used a base.
+[Chris Trinh](https://github.com/chtrinh) author of [SwaggerYard](https://github.com/synctv/swagger_yard) in which this gem is inspired and used a base.

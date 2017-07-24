@@ -12,7 +12,7 @@ module Swaggard
         @yard_name = yard_object.name
         @controller_class = controller_name.constantize
 
-        tag = yard_object.tags.find { |tag| tag.tag_name == 'tag' }
+        tag = yard_object.tags.find { |t| t.tag_name == 'tag' }
 
         @name =  tag ? tag.text : "#{@controller_class.controller_path}"
         @description = yard_object.docstring || ''

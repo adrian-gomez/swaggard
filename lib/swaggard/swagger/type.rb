@@ -3,18 +3,18 @@ module Swaggard
     class Type
 
       BASIC_TYPES = {
-        'integer'   => { 'type' => 'integer', 'format' => 'int32' },
-        'long'      => { 'type' => 'integer', 'format' => 'int64' },
-        'float'     => { 'type' => 'number',  'format' => 'float' },
-        'double'    => { 'type' => 'number',  'format' => 'double' },
-        'string'    => { 'type' => 'string' },
-        'byte'      => { 'type' => 'string',  'format' => 'byte' },
         'binary'    => { 'type' => 'string',  'format' => 'binary' },
         'boolean'   => { 'type' => 'boolean' },
-        'date'      => { 'type' => 'string',  'format' => 'date' },
+        'byte'      => { 'type' => 'string',  'format' => 'byte' },
         'date-time' => { 'type' => 'string',  'format' => 'date-time' },
+        'date'      => { 'type' => 'string',  'format' => 'date' },
+        'double'    => { 'type' => 'number',  'format' => 'double' },
+        'float'     => { 'type' => 'number',  'format' => 'float' },
+        'hash'      => { 'type' => 'object' },
+        'integer'   => { 'type' => 'integer', 'format' => 'int32' },
+        'long'      => { 'type' => 'integer', 'format' => 'int64' },
         'password'  => { 'type' => 'string',  'format' => 'password' },
-        'hash'      => { 'type' => 'object' }
+        'string'    => { 'type' => 'string' }
       }
 
       attr_reader :name
@@ -35,6 +35,10 @@ module Swaggard
         BASIC_TYPES.has_key?(@name.downcase)
       end
 
+      def custom_data_type?
+        Swaggard.configuration.custom_data_types.has_key?(@name.downcase)
+      end
+
       private
 
       def parse(types)
@@ -47,6 +51,8 @@ module Swaggard
       def type_tag_and_name
         if basic_type?
           BASIC_TYPES[@name.downcase]
+        elsif custom_data_type?
+          Swaggard.configuration.custom_data_types[@name.downcase]
         else
           { '$ref' => "#/definitions/#{name}" }
         end

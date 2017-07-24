@@ -18,7 +18,7 @@ module Swaggard
                 :description, :tos, :contact_email, :contact_name, :contact_url, :host,
                 :authentication_type, :authentication_key, :authentication_value,
                 :access_username, :access_password, :default_content_type, :use_cache,
-                :language, :additional_parameters, :schemes
+                :language, :additional_parameters, :schemes, :custom_data_types
 
     def swagger_version
       @swagger_version ||= '2.0'
@@ -112,5 +112,8 @@ module Swaggard
       @use_cache ||= false
     end
 
+    def custom_data_types
+      @custom_data_types ||= {}
+    end
   end
 end
