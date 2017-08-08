@@ -46,7 +46,7 @@ module Swaggard
 
       def type_tag_and_name
         if basic_type?
-          BASIC_TYPES[@name.downcase]
+          BASIC_TYPES[@name.downcase].clone  # Clone this since we don't want this hash instance to be changed globally
         else
           { '$ref' => "#/definitions/#{name}" }
         end
