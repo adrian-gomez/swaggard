@@ -52,7 +52,7 @@ module Swaggard
           # Example: [Array]     status(required)  Filter by status. (e.g. status[]=1&status[]=2&status[]=3)
           # Example: [Integer]   media[media_type_id]                          ID of the desired media type.
           def parse(string)
-            data_type, name, description = string.split
+            data_type, name, description = string.split(' ', 3)  # Fix to
 
             data_type.gsub!('[', '').gsub!(']', '')
 
