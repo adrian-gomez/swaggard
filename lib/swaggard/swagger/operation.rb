@@ -23,14 +23,20 @@ module Swaggard
         @description = (yard_object.docstring.lines[1..-1] || []).join("\n")
         @formats = Swaggard.configuration.api_formats
 
+        build_path_parameters(routes)
+
         yard_object.tags.each do |yard_tag|
           value = yard_tag.text
 
           case yard_tag.tag_name
+          when 'operation_id'
+            @operation_id = value
           when 'query_parameter'
             @parameters << Parameters::Query.new(value)
           when 'form_parameter'
             @parameters << Parameters::Form.new(value)
+          when 'body_required'
+            body_parameter.is_required = true
           when 'body_parameter'
             body_parameter.add_property(value)
           when 'parameter_list'
@@ -41,10 +47,12 @@ module Swaggard
             success_response.status_code = value
           when 'response_root'
             success_response.response_root = value
+          when 'response_description'
+            success_response.description = value
+          when 'response_example'
+            success_response.add_example(value)
           end
         end
-
-        build_path_parameters(routes)
 
         @parameters.sort_by { |parameter| parameter.name }
 
@@ -55,20 +63,22 @@ module Swaggard
         @path.present?
       end
 
-      def to_doc
-        produces = @formats.map { |format| "application/#{format}" }
-        consumes = @formats.map { |format| "application/#{format}" }
+      def empty?
+        @summary.blank? && @description.blank?
+      end
 
+      def to_doc
         {
           'tags'           => [@tag.name],
+          'operationId'    => @operation_id || @name,
           'summary'        => @summary,
           'description'    => @description,
-          'operationId'    => @name,
-          'consumes'       => consumes,
-          'produces'       => produces,
-          'parameters'     => @parameters.map(&:to_doc),
-          'responses'      => Hash[@responses.map { |response| [response.status_code, response.to_doc] }]
-        }
+          'produces'       => @formats.map { |format| "application/#{format}" },
+        }.tap do |doc|
+          doc['consumes'] = @formats.map { |format| "application/#{format}" } if @body_parameter
+          doc['parameters'] = @parameters.map(&:to_doc)
+          doc['responses'] = Hash[@responses.map { |response| [response.status_code, response.to_doc] }]
+        end
       end
 
       def definitions

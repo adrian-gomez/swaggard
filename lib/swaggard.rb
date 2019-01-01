@@ -23,21 +23,25 @@ module Swaggard
     # Register some custom yard tags
     def register_custom_yard_tags!
       ::YARD::Tags::Library.define_tag('Controller\'s tag',  :tag)
+      ::YARD::Tags::Library.define_tag('Operation id',  :operation_id)
       ::YARD::Tags::Library.define_tag('Query parameter', :query_parameter)
       ::YARD::Tags::Library.define_tag('Form parameter',  :form_parameter)
+      ::YARD::Tags::Library.define_tag('Body required',  :body_required)
       ::YARD::Tags::Library.define_tag('Body parameter',  :body_parameter)
       ::YARD::Tags::Library.define_tag('Parameter list',  :parameter_list)
       ::YARD::Tags::Library.define_tag('Response class',  :response_class)
-      ::YARD::Tags::Library.define_tag('Response Root',  :response_root)
-      ::YARD::Tags::Library.define_tag('Response Status',  :response_status)
+      ::YARD::Tags::Library.define_tag('Response root',  :response_root)
+      ::YARD::Tags::Library.define_tag('Response status',  :response_status)
+      ::YARD::Tags::Library.define_tag('Response description',  :response_description)
+      ::YARD::Tags::Library.define_tag('Response example',  :response_example)
     end
 
-    def get_doc(host)
+    def get_doc(host = nil)
       load!
 
       doc = @api.to_doc
 
-      doc['host'] = host if doc['host'].blank?
+      doc['host'] = host if doc['host'].blank? && host
 
       doc
     end

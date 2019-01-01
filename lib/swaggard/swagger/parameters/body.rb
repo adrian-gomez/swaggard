@@ -11,6 +11,7 @@ module Swaggard
         def initialize(operation_name)
           @in           = 'body'
           @name         = 'body'
+          @is_required  = false
           @description  = ''
           @definition   = Definition.new("#{operation_name}_body")
         end
@@ -20,12 +21,16 @@ module Swaggard
           @definition.add_property(property)
         end
 
+        def empty?
+          @definition.empty?
+        end
+
         def to_doc
           doc = super
 
           doc.delete('type')
+          doc.delete('description')
 
-          doc['required'] = false
           doc['schema'] = { '$ref' => "#/definitions/#{@definition.id}" }
 
           doc

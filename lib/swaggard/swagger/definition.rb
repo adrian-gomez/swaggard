@@ -13,11 +13,15 @@ module Swaggard
         @properties << property
       end
 
+      def empty?
+        @properties.empty?
+      end
+
       def to_doc
         {
           'type'        => 'object',
-          'required'    => [],
-          'properties'  => Hash[@properties.map { |property| [property.id, property.to_doc] }]
+          'properties'  => Hash[@properties.map { |property| [property.id, property.to_doc] }],
+          'required'    => []
         }
       end
 

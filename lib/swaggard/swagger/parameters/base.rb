@@ -4,11 +4,12 @@ module Swaggard
       class Base
 
         attr_reader :name
+        attr_writer :is_required
 
         def to_doc
           {
-            'in'            => @in,
             'name'          => @name,
+            'in'            => @in,
             'description'   => @description,
             'required'      => @is_required,
             'type'          => @data_type

@@ -27,9 +27,9 @@ module Swaggard
       {
         'swagger' => Swaggard.configuration.swagger_version,
         'info' => {
-          'description'     => Swaggard.configuration.description,
           'version'         => Swaggard.configuration.api_version,
           'title'           => Swaggard.configuration.title,
+          'description'     => Swaggard.configuration.description,
           'termsOfService'  => Swaggard.configuration.tos,
           'contact' => {
             'name'  => Swaggard.configuration.contact_name,
@@ -43,12 +43,21 @@ module Swaggard
         },
         'host'        => Swaggard.configuration.host,
         'basePath'    => Swaggard.configuration.api_base_path,
-        'tags'        => @tags.map { |_, tag| tag.to_doc },
         'schemes'     => Swaggard.configuration.schemes,
-        'paths'       => Hash[@paths.values.map { |path| [path.path, path.to_doc] }],
+        'consumes'    => Swaggard.configuration.api_formats.map { |format| "application/#{format}" },
+        'produces'    => Swaggard.configuration.api_formats.map { |format| "application/#{format}" },
+        'tags'        => @tags.map { |_, tag| tag.to_doc },
+        'paths'       => Hash[@paths.values.map { |path| [format_path(path.path), path.to_doc] }],
         'definitions' => Hash[@definitions.map { |definition| [definition.id, definition.to_doc] }]
       }
     end
 
+    private
+
+    def format_path(path)
+      return path unless Swaggard.configuration.exclude_base_path_from_paths
+
+      path.gsub(Swaggard.configuration.api_base_path, '')
+    end
   end
 end

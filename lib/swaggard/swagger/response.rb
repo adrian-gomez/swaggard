@@ -2,8 +2,6 @@ module Swaggard
   module Swagger
     class Response
 
-      DEFAULT_STATUS_CODE = 'default'
-      DEFAULT_DESCRIPTION = 'successful operation'
       PRIMITIVE_TYPES = %w[integer long float double string byte binary boolean date date-time password hash]
 
       attr_writer :status_code, :description
@@ -22,7 +20,7 @@ module Swaggard
       end
 
       def status_code
-        @status_code || DEFAULT_STATUS_CODE
+        @status_code || Swaggard.configuration.default_response_status_code
       end
 
       def response_class=(value)
@@ -34,8 +32,12 @@ module Swaggard
         @response_model.id = root
       end
 
+      def add_example(value)
+        @example = value
+      end
+
       def description
-        @description || DEFAULT_DESCRIPTION
+        @description || Swaggard.configuration.default_response_description
       end
 
       def to_doc
@@ -47,6 +49,15 @@ module Swaggard
                    end
 
           doc.merge!('schema' => schema) if schema
+          doc.merge!('examples' => example_to_doc) if @example
+        end
+      end
+
+      def example_to_doc
+        Swaggard.configuration.api_formats.inject({}) do |examples, format|
+          examples.merge!("application/#{format}" => { '$ref' => @example })
+
+          examples
         end
       end
 

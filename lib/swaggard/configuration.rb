@@ -18,7 +18,11 @@ module Swaggard
                 :description, :tos, :contact_email, :contact_name, :contact_url, :host,
                 :authentication_type, :authentication_key, :authentication_value,
                 :access_username, :access_password, :default_content_type, :use_cache,
-                :language, :additional_parameters, :schemes
+                :language, :additional_parameters, :schemes, :ignore_undocumented_paths,
+                :license_name, :exclude_base_path_from_paths, :default_response_description,
+                :default_response_status_code
+
+    attr_reader :custom_types
 
     def swagger_version
       @swagger_version ||= '2.0'
@@ -100,6 +104,26 @@ module Swaggard
       @default_content_type ||= ''
     end
 
+    def default_response_status_code
+      @default_response_status_code ||= 'default'
+    end
+
+    def default_response_description
+      @default_response_description ||= 'successful operation'
+    end
+
+    def ignore_undocumented_paths
+      return @ignore_undocumented_paths unless @ignore_undocumented_paths.nil?
+
+      @ignore_undocumented_paths = false
+    end
+
+    def exclude_base_path_from_paths
+      return @exclude_base_path_from_paths unless @exclude_base_path_from_paths.nil?
+
+      @exclude_base_path_from_paths = false
+    end
+
     def language
       @language ||= 'en'
     end
@@ -112,5 +136,12 @@ module Swaggard
       @use_cache ||= false
     end
 
+    def custom_types
+      @custom_types ||= {}
+    end
+
+    def add_custom_type(name, definition)
+      custom_types[name] = definition
+    end
   end
 end

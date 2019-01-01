@@ -31,10 +31,6 @@ module Swaggard
         end
       end
 
-      def basic_type?
-        BASIC_TYPES.has_key?(@name.downcase)
-      end
-
       private
 
       def parse(types)
@@ -44,9 +40,20 @@ module Swaggard
         @is_array = parts.grep(/array/i).any?
       end
 
+
+      def basic_type?
+        BASIC_TYPES.has_key?(@name.downcase)
+      end
+
+      def custom_type?
+        Swaggard.configuration.custom_types.has_key?(@name)
+      end
+
       def type_tag_and_name
         if basic_type?
           BASIC_TYPES[@name.downcase]
+        elsif custom_type?
+          Swaggard.configuration.custom_types[@name]
         else
           { '$ref' => "#/definitions/#{name}" }
         end

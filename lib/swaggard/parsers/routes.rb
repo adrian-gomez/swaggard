@@ -12,7 +12,7 @@ module Swaggard
           action = route_action(route)
 
           parsed_routes[controller] ||= {}
-          parsed_routes[controller][action] = {
+          parsed_routes[controller][action] ||= {
             verb:         route_verb(route),
             path:         route_path(route),
             path_params:  route_path_params(route)

@@ -14,7 +14,11 @@ module Swaggard
             tag = Swagger::Tag.new(yard_object)
           elsif tag && yard_object.type == :method
             operation = Swagger::Operation.new(yard_object, tag, routes)
-            operations << operation if operation.valid?
+
+            next unless operation.valid?
+            next if Swaggard.configuration.ignore_undocumented_paths && operation.empty?
+
+            operations << operation
           end
         end
 
