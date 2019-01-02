@@ -20,7 +20,7 @@ module Swaggard
                 :access_username, :access_password, :default_content_type, :use_cache,
                 :language, :additional_parameters, :schemes, :ignore_undocumented_paths,
                 :license_name, :exclude_base_path_from_paths, :default_response_description,
-                :default_response_status_code
+                :default_response_status_code, :excluded_paths, :path_parameter_description
 
     attr_reader :custom_types
 
@@ -69,7 +69,7 @@ module Swaggard
     end
 
     def contact_url
-      @contact_email ||= ''
+      @contact_url ||= ''
     end
 
     def license_name
@@ -140,8 +140,16 @@ module Swaggard
       @custom_types ||= {}
     end
 
+    def excluded_paths
+      @excluded_paths ||= []
+    end
+
     def add_custom_type(name, definition)
       custom_types[name] = definition
+    end
+
+    def path_parameter_description
+      @path_parameter_description ||= ->(path_parameter) { "Scope response to #{path_parameter.name}" }
     end
   end
 end

@@ -5,21 +5,22 @@ module Swaggard
       def run(routes)
         return {} unless routes
 
-        parsed_routes = {}
+        routes.inject({}) do |parsed_routes, route|
+          path = route_path(route)
 
-        routes.each do |route|
-          controller = route_controller(route)
-          action = route_action(route)
+          unless Swaggard.configuration.excluded_paths.any? { |excluded_path| Regexp.new(excluded_path) =~ path }
+            verb = route_verb(route)
 
-          parsed_routes[controller] ||= {}
-          parsed_routes[controller][action] ||= {
-            verb:         route_verb(route),
-            path:         route_path(route),
-            path_params:  route_path_params(route)
-          }
-        end
+            parsed_routes[path] ||= {}
+            parsed_routes[path][verb] = {
+              controller:   route_controller(route),
+              action:       route_action(route),
+              path_params:  route_path_params(route)
+            }
+          end
 
-        parsed_routes
+          parsed_routes
+        end.sort.to_h
       end
 
       private

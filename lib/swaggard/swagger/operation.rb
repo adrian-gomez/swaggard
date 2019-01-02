@@ -9,21 +9,23 @@ require_relative 'response'
 module Swaggard
   module Swagger
     class Operation
-
       attr_reader :nickname
       attr_accessor :path, :parameters, :description, :http_method, :summary, :notes,
                     :error_responses, :tag
 
-      def initialize(yard_object, tag, routes)
+      def initialize(yard_object, tag, path, verb, path_params)
         @name = yard_object.name
         @tag = tag
-        @summary = yard_object.docstring.lines.first || ''
+        @summary = (yard_object.docstring.lines.first || '').chomp
         @parameters  = []
         @responses = []
-        @description = (yard_object.docstring.lines[1..-1] || []).join("\n")
-        @formats = Swaggard.configuration.api_formats
 
-        build_path_parameters(routes)
+        @description = (yard_object.docstring.lines[1..-1] || []).map(&:chomp).reject(&:empty?).compact.join("\n")
+        @formats = Swaggard.configuration.api_formats
+        @http_method = verb
+        @path = path
+
+        build_path_parameters(path_params)
 
         yard_object.tags.each do |yard_tag|
           value = yard_tag.text
@@ -37,6 +39,12 @@ module Swaggard
             @parameters << Parameters::Form.new(value)
           when 'body_required'
             body_parameter.is_required = true
+          when 'body_description'
+            body_parameter.description = value
+          when 'body_title'
+            body_parameter.title = value
+          when 'body_definition'
+            body_parameter.definition = value
           when 'body_parameter'
             body_parameter.add_property(value)
           when 'parameter_list'
@@ -51,6 +59,8 @@ module Swaggard
             success_response.description = value
           when 'response_example'
             success_response.add_example(value)
+          when 'response_header'
+            success_response.add_header(value)
           end
         end
 
@@ -102,19 +112,11 @@ module Swaggard
         @body_parameter
       end
 
-      def build_path_parameters(routes)
+      def build_path_parameters(path_params)
         return unless @tag.controller_class
 
-        route = (routes[@tag.controller_class.controller_path] || {})[@name.to_s]
-
-        return unless route
-
-        @http_method = route[:verb]
-        @path = route[:path]
-
-        route[:path_params].each { |path_param| @parameters << Parameters::Path.new(path_param) }
+        path_params.each { |path_param| @parameters << Parameters::Path.new(self, path_param) }
       end
-
     end
   end
 end

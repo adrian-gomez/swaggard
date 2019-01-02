@@ -2,7 +2,6 @@ require_relative 'swagger/path'
 
 module Swaggard
   class ApiDefinition
-
     attr_accessor :definitions
 
     def initialize
@@ -24,6 +23,13 @@ module Swaggard
     end
 
     def to_doc
+      contact = { 'name'  => Swaggard.configuration.contact_name }
+      contact['email'] = Swaggard.configuration.contact_email if Swaggard.configuration.contact_email.present?
+      contact['url'] = Swaggard.configuration.contact_url if Swaggard.configuration.contact_url.present?
+
+      license = { 'name'  => Swaggard.configuration.license_name }
+      license['url'] = Swaggard.configuration.license_url if Swaggard.configuration.license_url.present?
+
       {
         'swagger' => Swaggard.configuration.swagger_version,
         'info' => {
@@ -31,15 +37,8 @@ module Swaggard
           'title'           => Swaggard.configuration.title,
           'description'     => Swaggard.configuration.description,
           'termsOfService'  => Swaggard.configuration.tos,
-          'contact' => {
-            'name'  => Swaggard.configuration.contact_name,
-            'email' => Swaggard.configuration.contact_email,
-            'url'   => Swaggard.configuration.contact_url
-          },
-          'license' => {
-            'name'  => Swaggard.configuration.license_name,
-            'url'   => Swaggard.configuration.license_url
-          }
+          'contact'         => contact,
+          'license'         => license,
         },
         'host'        => Swaggard.configuration.host,
         'basePath'    => Swaggard.configuration.api_base_path,

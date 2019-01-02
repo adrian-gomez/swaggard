@@ -3,26 +3,20 @@ require_relative '../swagger/tag'
 
 module Swaggard
   module Parsers
-    class Controllers
+    class Controller
 
-      def run(yard_objects, routes)
+      def run(yard_objects)
         tag = nil
-        operations = []
+        operations = {}
 
         yard_objects.each do |yard_object|
           if yard_object.type == :class
             tag = Swagger::Tag.new(yard_object)
           elsif tag && yard_object.type == :method
-            operation = Swagger::Operation.new(yard_object, tag, routes)
-
-            next unless operation.valid?
-            next if Swaggard.configuration.ignore_undocumented_paths && operation.empty?
-
-            operations << operation
+            name = yard_object.name
+            operations[name.to_s] = yard_object
           end
         end
-
-        return unless operations.any?
 
         return tag, operations
       end

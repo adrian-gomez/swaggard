@@ -1,3 +1,5 @@
+require_relative 'response_header'
+
 module Swaggard
   module Swagger
     class Response
@@ -9,6 +11,7 @@ module Swaggard
       def initialize(operation_name)
         @operation_name = operation_name
         @response_model = ResponseModel.new
+        @headers = []
       end
 
       def definition
@@ -36,6 +39,10 @@ module Swaggard
         @example = value
       end
 
+      def add_header(value)
+        @headers << ResponseHeader.new(value)
+      end
+
       def description
         @description || Swaggard.configuration.default_response_description
       end
@@ -50,6 +57,9 @@ module Swaggard
 
           doc.merge!('schema' => schema) if schema
           doc.merge!('examples' => example_to_doc) if @example
+          if @headers.any?
+            doc['headers'] = Hash[@headers.map { |header| [header.name, header.to_doc] }]
+          end
         end
       end
 

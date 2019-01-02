@@ -4,7 +4,6 @@ module Swaggard
   module Swagger
     module Parameters
       class List < Base
-
         def initialize(string)
           @in = 'query'
           parse(string)
@@ -39,7 +38,6 @@ module Swaggard
           @data_type = data_type.downcase
           @is_required = required.present?
         end
-
       end
     end
   end

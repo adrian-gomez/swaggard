@@ -9,11 +9,12 @@ module Swaggard
         attr_reader :definition
 
         def initialize(operation_name)
-          @in           = 'body'
-          @name         = 'body'
-          @is_required  = false
-          @description  = ''
-          @definition   = Definition.new("#{operation_name}_body")
+          @in             = 'body'
+          @name           = 'body'
+          @is_required    = false
+          @description    = ''
+          @definition     = Definition.new("#{operation_name}_body")
+          @definition_id  = @definition.id
         end
 
         def add_property(string)
@@ -31,9 +32,21 @@ module Swaggard
           doc.delete('type')
           doc.delete('description')
 
-          doc['schema'] = { '$ref' => "#/definitions/#{@definition.id}" }
+          doc['schema'] = { '$ref' => "#/definitions/#{@definition_id}" }
 
           doc
+        end
+
+        def description=(description)
+          @definition.description = description
+        end
+
+        def title=(title)
+          @definition.title = title
+        end
+
+        def definition=(definition)
+          @definition_id = definition
         end
 
         private
@@ -47,9 +60,14 @@ module Swaggard
             parse(string)
           end
 
+          def required?
+            @required
+          end
+
           def to_doc
             result = @type.to_doc
             result['description'] = @description if @description
+            result['enum'] = @options if @options.present?
             result
           end
 
@@ -57,13 +75,16 @@ module Swaggard
           # Example: [Array]     status(required)  Filter by status. (e.g. status[]=1&status[]=2&status[]=3)
           # Example: [Integer]   media[media_type_id]                          ID of the desired media type.
           def parse(string)
-            data_type, name, description = string.split
-
-            data_type.gsub!('[', '').gsub!(']', '')
+            data_type, required, name, options_and_description = string.match(/\A\[(\S*)\](!)?\s*([\w\[\]]*)\s*(.*)\Z/).captures
+            allow_multiple = name.gsub!('[]', '')
+            options, description = options_and_description.match(/\A(\[.*\])?(.*)\Z/).captures
+            options = options ? options.gsub(/\[?\]?\s?/, '').split(',') : []
 
             @id = name
-            @description = description
+            @description = description if description.present?
             @type = Type.new([data_type])
+            @required = required
+            @options = options
           end
 
         end

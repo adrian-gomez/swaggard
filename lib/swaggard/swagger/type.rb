@@ -1,7 +1,6 @@
 module Swaggard
   module Swagger
     class Type
-
       BASIC_TYPES = {
         'integer'   => { 'type' => 'integer', 'format' => 'int32' },
         'long'      => { 'type' => 'integer', 'format' => 'int64' },
@@ -51,14 +50,13 @@ module Swaggard
 
       def type_tag_and_name
         if basic_type?
-          BASIC_TYPES[@name.downcase]
+          BASIC_TYPES[@name.downcase].dup
         elsif custom_type?
-          Swaggard.configuration.custom_types[@name]
+          Swaggard.configuration.custom_types[@name].dup
         else
           { '$ref' => "#/definitions/#{name}" }
         end
       end
-
     end
   end
 end
