@@ -22,6 +22,10 @@ module Swaggard
       @definitions.concat(operation.definitions)
     end
 
+    def ignore_put_if_patch!
+      @paths.values.each(&:ignore_put_if_patch!)
+    end
+
     def to_doc
       contact = { 'name'  => Swaggard.configuration.contact_name }
       contact['email'] = Swaggard.configuration.contact_email if Swaggard.configuration.contact_email.present?

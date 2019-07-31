@@ -20,7 +20,8 @@ module Swaggard
                 :access_username, :access_password, :default_content_type, :use_cache,
                 :language, :additional_parameters, :schemes, :ignore_undocumented_paths,
                 :license_name, :exclude_base_path_from_paths, :default_response_description,
-                :default_response_status_code, :excluded_paths, :path_parameter_description
+                :default_response_status_code, :excluded_paths, :path_parameter_description,
+                :ignore_put_if_patch_exists
 
     attr_reader :custom_types
 
@@ -150,6 +151,12 @@ module Swaggard
 
     def path_parameter_description
       @path_parameter_description ||= ->(path_parameter) { "Scope response to #{path_parameter.name}" }
+    end
+
+    def ignore_put_if_patch_exists
+      return @ignore_put_if_patch_exists unless @ignore_put_if_patch_exists.nil?
+
+      @ignore_put_if_patch_exists = false
     end
   end
 end

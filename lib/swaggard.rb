@@ -57,6 +57,8 @@ module Swaggard
 
       parse_models
       build_operations
+
+      @api.ignore_put_if_patch! if Swaggard.configuration.ignore_put_if_patch_exists
     end
 
     def build_operation(path, verb, route)
