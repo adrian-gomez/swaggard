@@ -10,6 +10,7 @@ module Swaggard
         name = yard_object.name.dup
         options_and_description = yard_object.text&.dup || ''
 
+        options_and_description.gsub!("\n", ' ')
         options, description = options_and_description.match(/\A(\[.*\])?(.*)\Z/).captures
         options = options ? options.gsub(/\[?\]?\s?/, '').split(',') : []
         description = description.strip
