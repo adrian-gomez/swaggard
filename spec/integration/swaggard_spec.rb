@@ -3,7 +3,6 @@ require 'spec_helper'
 require 'json-schema'
 
 describe Swaggard, '.get_doc' do
-
   let(:controller_path) { File.expand_path('../../fixtures/dummy/app/controllers/**/*.rb', __FILE__) }
   let(:api_json)        { File.read(File.expand_path('../../fixtures/api.json', __FILE__)) }
 
@@ -19,5 +18,4 @@ describe Swaggard, '.get_doc' do
 
     expect(swagger_json).to eq(api_json)
   end
-
 end
