@@ -32,7 +32,7 @@ module Swaggard
 
           case yard_tag.tag_name
           when 'operation_id'
-            @operation_id = value
+            @operation_id = "#{@tag.name}.#{value}"
           when 'query_parameter'
             @parameters << Parameters::Query.new(value)
           when 'form_parameter'

@@ -61,21 +61,25 @@ module Swaggard
       @api.ignore_put_if_patch! if Swaggard.configuration.ignore_put_if_patch_exists
     end
 
+    def tag_matches?(tag, controller_name, path)
+      matches = tag.controller_name == controller_name
+
+      return matches unless tag.route.present?
+
+      matches && Regexp.new(tag.route).match?(path)
+    end
+
     def build_operation(path, verb, route)
       controller_name = route[:controller]
       action_name = route[:action]
 
-      return unless controllers[controller_name]
-
-      controller_tag = controllers[controller_name][:tag]
+      controller_tag, controller_operations = tags.find { |tag, _operations| tag_matches?(tag, controller_name, path) }
 
       return unless controller_tag
 
-      return unless controllers[controller_name][:operations]
+      return unless controller_operations[action_name]
 
-      return unless controllers[controller_name][:operations][action_name]
-
-      operation_yard_object = controllers[controller_name][:operations][action_name]
+      operation_yard_object = controller_operations[action_name]
 
       return unless operation_yard_object
 
@@ -100,23 +104,26 @@ module Swaggard
       end
     end
 
-    def controllers
-      return @controllers if @controllers
+    def tags
+      return @tags if @tags
 
       parser = Parsers::Controller.new
 
-      @controllers = {}
+      @tags = []
       Dir[configuration.controllers_path].each do |file|
         yard_objects = get_yard_objects(file)
 
-        tag, operations = parser.run(yard_objects)
+        tags, operations = parser.run(yard_objects)
 
-        next unless tag
+        next unless tags
 
-        @controllers[tag.controller_class.controller_path] ||= { tag: tag, operations: operations }
+        tags.each do |tag|
+          @tags << [tag, operations]
+          # [tag.controller_class.controller_path] ||= { tag: tag, operations: operations }
+        end
       end
 
-      @controllers
+      @tags
     end
 
     def routes
