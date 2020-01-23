@@ -11,6 +11,8 @@ the supported rails version.
 
 Swaggard Version | Swagger UI Version  | Supported Rails Versions
 ---------------- | ------------------- | ------------------------
+1.1.x            | 2.2.8               | 4 - 6
+1.0.x            | 2.2.8               | 4 - 5
 0.5.x            | 2.2.8               | 4 - 5
 0.4.x            | 2.2.8               | 4
 0.3.x            | 2.1.3               | 4
@@ -42,6 +44,13 @@ Mount your engine
 	# config/routes.rb
 
 	mount Swaggard::Engine, at: '/api_docs/swagger/'
+
+Make sure the asset pipeline is enabled by either requiring all railties
+or just the sprockets one:
+
+    # config/application.rb
+    
+    require 'sprockets/railtie'
 
 Access your service documentation
 

@@ -1,11 +1,10 @@
 unless Rails::Application.instance_methods.include?(:assets_manifest)
-  warn <<-END
-[Swaggard] It seems you are using an api only rails setup, but swaggard
-[Swaggard] neeeds sprockets in order to work so its going to require it.
-[Swaggard] This might have undesired side effects, if thats not  the case
-[Swaggard] you can ignore this warning.
+  warn <<~END
+    [Swaggard] It seems you are using an api only rails setup, but swaggard
+    [Swaggard] web app needs sprockets in order to work. Make sure to add
+    [Swaggard] require 'sprockets/railtie'.
+    [Swaggard] If you plan to use it
   END
-  require 'sprockets/railtie'
 end
 
 module Swaggard
