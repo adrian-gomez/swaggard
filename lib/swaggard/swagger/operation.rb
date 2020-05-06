@@ -80,7 +80,7 @@ module Swaggard
       def to_doc
         {
           'tags'           => [@tag.name],
-          'operationId'    => @operation_id || @name,
+          'operationId'    => @operation_id || "#{@path}/#{@name}".parameterize,
           'summary'        => @summary,
           'description'    => @description,
           'produces'       => @formats.map { |format| "application/#{format}" },
