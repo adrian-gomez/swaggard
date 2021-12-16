@@ -7,7 +7,7 @@ module Swaggard
     def initialize
       @paths        = {}
       @tags         = {}
-      @definitions  = []
+      @definitions  = {}
     end
 
     def add_tag(tag)
@@ -19,7 +19,7 @@ module Swaggard
     def add_operation(operation)
       @paths[operation.path] ||= Swagger::Path.new(operation.path)
       @paths[operation.path].add_operation(operation)
-      @definitions.concat(operation.definitions)
+      @definitions.merge!(operation.definitions)
     end
 
     def ignore_put_if_patch!
@@ -51,7 +51,7 @@ module Swaggard
         'produces'    => Swaggard.configuration.api_formats.map { |format| "application/#{format}" },
         'tags'        => @tags.map { |_, tag| tag.to_doc },
         'paths'       => Hash[@paths.values.map { |path| [format_path(path.path), path.to_doc] }],
-        'definitions' => Hash[@definitions.map { |definition| [definition.id, definition.to_doc] }]
+        'definitions' => Hash[@definitions.map { |id, definition| [id, definition.to_doc(@definitions)] }]
       }
     end
 

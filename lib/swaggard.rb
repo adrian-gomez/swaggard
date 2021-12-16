@@ -38,6 +38,7 @@ module Swaggard
       ::YARD::Tags::Library.define_tag('Response description', :response_description)
       ::YARD::Tags::Library.define_tag('Response example', :response_example)
       ::YARD::Tags::Library.define_tag('Response header', :response_header)
+      ::YARD::Tags::Library.define_tag('Ignore inherited attributes', :ignore_inherited)
     end
 
     def get_doc(host = nil)
@@ -119,7 +120,6 @@ module Swaggard
 
         tags.each do |tag|
           @tags << [tag, operations]
-          # [tag.controller_class.controller_path] ||= { tag: tag, operations: operations }
         end
       end
 
@@ -136,12 +136,12 @@ module Swaggard
     def parse_models
       parser = Parsers::Models.new
 
-      definitions =[]
+      definitions = {}
       configuration.models_paths.each do |path|
         Dir[path].each do |file|
           yard_objects = get_yard_objects(file)
 
-          definitions.concat(parser.run(yard_objects))
+          definitions.merge!(parser.run(yard_objects))
         end
 
         @api.definitions = definitions

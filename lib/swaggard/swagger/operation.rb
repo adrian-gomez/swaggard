@@ -92,8 +92,12 @@ module Swaggard
       end
 
       def definitions
-        @responses.map(&:definition).compact.tap do |definitions|
-          definitions << @body_parameter.definition if @body_parameter
+        @responses.map(&:definition).compact.inject({}) do |definitions, definition|
+          definitions[definition.id] = definition
+        end.tap do |definitions|
+          next unless @body_parameter
+
+          definitions[@body_parameter.definition.id] = @body_parameter.definition
         end
       end
 

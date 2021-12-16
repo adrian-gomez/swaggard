@@ -6,22 +6,31 @@ module Swaggard
     class Models
 
       def run(yard_objects)
-        definitions = []
+        definitions = {}
 
         yard_objects.each do |yard_object|
-          next unless yard_object.type == :class
+          definition = parse_yard_object(yard_object)
 
-          definition = Swagger::Definition.new(yard_object.path)
-
-          yard_object.tags.each do |tag|
-            property = Swagger::Property.new(tag)
-            definition.add_property(property)
-          end
-
-          definitions << definition
+          definitions[definition.id] = definition if definition
         end
 
         definitions
+      end
+
+      def parse_yard_object(yard_object)
+        return unless yard_object.type == :class
+
+        Swagger::Definition.new(yard_object.path, ancestors: yard_object.inheritance_tree.map(&:path)).tap do |definition|
+          yard_object.tags.each do |tag|
+            case tag.tag_name 
+            when 'attr'
+              property = Swagger::Property.new(tag)
+              definition.add_property(property)
+            when 'ignore_inherited'
+              definition.ignore_inherited = true
+            end
+          end
+        end
       end
 
     end
