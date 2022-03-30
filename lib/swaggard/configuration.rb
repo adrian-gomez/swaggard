@@ -23,8 +23,6 @@ module Swaggard
                 :default_response_status_code, :excluded_paths, :path_parameter_description,
                 :ignore_put_if_patch_exists
 
-    attr_reader :custom_types
-
     def swagger_version
       @swagger_version ||= '2.0'
     end
@@ -147,6 +145,14 @@ module Swaggard
 
     def add_custom_type(name, definition)
       custom_types[name] = definition
+    end
+
+    def definitions
+      @definitions ||= {}
+    end
+
+    def add_definition(definition)
+      definitions[definition.id] = definition
     end
 
     def path_parameter_description

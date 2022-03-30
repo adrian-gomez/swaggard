@@ -3,23 +3,13 @@ require_relative 'type'
 module Swaggard
   module Swagger
     class Property
-
       attr_reader :id, :type, :description
 
-      def initialize(yard_object)
-        name = yard_object.name.dup
-        options_and_description = yard_object.text&.dup || ''
-
-        options_and_description.gsub!("\n", ' ')
-        options, description = options_and_description.match(/\A(\[.*\])?(.*)\Z/).captures
-        options = options ? options.gsub(/\[?\]?\s?/, '').split(',') : []
-        description = description.strip
-        required = name.gsub!(/^!/, '')
-
+      def initialize(name, type, description = '', required = false, options = [])
         @id = name
-        @type = Type.new(yard_object.types)
+        @type = type
         @description = description
-        @required = required.present?
+        @required = required
         @options = options
       end
 
@@ -33,7 +23,6 @@ module Swaggard
         result['enum'] = @options if @options.present?
         result
       end
-
     end
   end
 end

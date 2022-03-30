@@ -1,10 +1,10 @@
 require_relative 'base'
+require_relative '../../parsers/type'
 
 module Swaggard
   module Swagger
     module Parameters
       class Query < Base
-
         def initialize(string)
           @in = 'query'
           parse(string)
@@ -37,12 +37,11 @@ module Swaggard
 
           @name = name
           @description = description
-          @type = Type.new([data_type])
+          @type = Parsers::Type.run(data_type)
           @is_required = required.present?
           @allow_multiple = allow_multiple.present?
           @options = options
         end
-
       end
     end
   end

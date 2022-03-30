@@ -1,11 +1,10 @@
 require_relative 'base'
-require_relative '../type'
+require_relative '../../parsers/type'
 
 module Swaggard
   module Swagger
     module Parameters
       class Body < Base
-
         attr_reader :definition
 
         def initialize(operation_name)
@@ -51,9 +50,7 @@ module Swaggard
 
         private
 
-
         class Property
-
           attr_reader :id
 
           def initialize(string)
@@ -83,13 +80,11 @@ module Swaggard
 
             @id = name
             @description = description if description.present?
-            @type = Type.new([data_type])
+            @type = Parsers::Type.run(data_type)
             @required = required
             @options = options
           end
-
         end
-
       end
     end
   end

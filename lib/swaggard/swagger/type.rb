@@ -12,14 +12,16 @@ module Swaggard
         'boolean'   => { 'type' => 'boolean' },
         'date'      => { 'type' => 'string',  'format' => 'date' },
         'date-time' => { 'type' => 'string',  'format' => 'date-time' },
+        'datetime'  => { 'type' => 'string',  'format' => 'date-time' },
         'password'  => { 'type' => 'string',  'format' => 'password' },
         'hash'      => { 'type' => 'object' }
       }
 
       attr_reader :name
 
-      def initialize(types)
-        parse(types)
+      def initialize(name, is_array = false)
+        @name = name.to_s
+        @is_array = is_array
       end
 
       def to_doc
@@ -31,14 +33,6 @@ module Swaggard
       end
 
       private
-
-      def parse(types)
-        parts = types.first.split(/[<>]/)
-
-        @name = parts.last
-        @is_array = parts.grep(/array/i).any?
-      end
-
 
       def basic_type?
         BASIC_TYPES.has_key?(@name.downcase)

@@ -22,9 +22,9 @@ module Swaggard
 
         Swagger::Definition.new(yard_object.path, ancestors: yard_object.inheritance_tree.map(&:path)).tap do |definition|
           yard_object.tags.each do |tag|
-            case tag.tag_name 
+            case tag.tag_name
             when 'attr'
-              property = Swagger::Property.new(tag)
+              property = Swaggard::Parsers::Property.run(tag)
               definition.add_property(property)
             when 'ignore_inherited'
               definition.ignore_inherited = true

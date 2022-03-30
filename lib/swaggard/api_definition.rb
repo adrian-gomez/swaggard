@@ -51,7 +51,7 @@ module Swaggard
         'produces'    => Swaggard.configuration.api_formats.map { |format| "application/#{format}" },
         'tags'        => @tags.map { |_, tag| tag.to_doc },
         'paths'       => Hash[@paths.values.map { |path| [format_path(path.path), path.to_doc] }],
-        'definitions' => Hash[@definitions.map { |id, definition| [id, definition.to_doc(@definitions)] }]
+        'definitions' => Hash[@definitions.merge(Swaggard.configuration.definitions).map { |id, definition| [id, definition.to_doc(@definitions)] }]
       }
     end
 
