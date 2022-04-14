@@ -1,5 +1,5 @@
 require_relative '../swagger/definition'
-require_relative '../swagger/property'
+require_relative 'property'
 
 module Swaggard
   module Parsers
