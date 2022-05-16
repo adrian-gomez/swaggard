@@ -6,7 +6,7 @@ module Swaggard
       File.basename($PROGRAM_NAME) == 'rake'
     end
 
-    initializer 'swaggard.finisher_hook', after: :finisher_hook do |app|
+    initializer 'swaggard.finisher_hook' do |app|
       app.reload_routes!
 
       if Rails.env.development? && !rake? && !app.methods.include?(:assets_manifest)
