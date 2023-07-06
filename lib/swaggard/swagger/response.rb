@@ -96,6 +96,9 @@ module Swaggard
           end
         end
 
+        def required?
+        end
+
         def response_class_type
           if PRIMITIVE_TYPES.include?(@response_class)
             { 'type' => @response_class }
