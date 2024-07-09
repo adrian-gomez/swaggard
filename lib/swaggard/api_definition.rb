@@ -52,7 +52,7 @@ module Swaggard
         'tags'        => @tags.map { |_, tag| tag.to_doc },
         'paths'       => Hash[@paths.values.map { |path| [format_path(path.path), path.to_doc] }],
         'definitions' => Hash[@definitions.merge(Swaggard.configuration.definitions).map { |id, definition| [id, definition.to_doc(@definitions)] }]
-      }
+      }.merge(security_definitions)
     end
 
     private
@@ -61,6 +61,23 @@ module Swaggard
       return path unless Swaggard.configuration.exclude_base_path_from_paths
 
       path.gsub(Swaggard.configuration.api_base_path, '')
+    end
+
+    def security_definitions
+      security_definitions = Swaggard.configuration.security_definitions
+
+      return {} if security_definitions.empty? && Swaggard.configuration.security.empty?
+
+      Swaggard.configuration.security.keys.each do |authentication_type|
+        next if security_definitions.key?(authentication_type)
+
+        warn "#{authentication_type} not supported by securityDefinitions"
+      end
+
+      {
+        'securityDefinitions' => security_definitions,
+        'security' => Swaggard.configuration.security,
+      }
     end
   end
 end

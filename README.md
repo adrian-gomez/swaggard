@@ -49,7 +49,7 @@ Make sure the asset pipeline is enabled by either requiring all railties
 or just the sprockets one:
 
     # config/application.rb
-    
+
     require 'sprockets/railtie'
 
 Access your service documentation
@@ -154,7 +154,7 @@ Will generate
 
 ### Controllers
 
-- `@tag name` This is used to indicate under what `name` tag this controller needs to be grouped. If not provided it will use the full controller class name.
+- `@tag name` This is used to indicate under what `name` tag this controller needs to be grouped. If not provided and Con.ignore_untagged_controllers = true it will use the full controller class name.
 - `@query_parameter [type] name` This is used to indicate that your action receives the `name` parameter of `type` on the query string.
 - `@body_parameter [type] name` This is used to indicate that your action receives the `name` parameter of `type` on the body.
 - `@response_class type` This is used to indicate that your action returns a response of `type`.
@@ -162,6 +162,15 @@ Will generate
 - `@response_root name` This is used to indicate that your action returns its response inside a root key element `name`. If not provided the root is omitted and the response its returned directly.
 - `@form_parameter`
 - `@parameter_list`
+
+If you want to generate documentation for all controllers even for those that don't have a tag do:
+    # config/initializers/swaggard.rb
+    Swaggard.configure do |config|
+      ...
+      config.ignore_untagged_controllers = false
+      ...
+    end
+
 
 ### Models
 

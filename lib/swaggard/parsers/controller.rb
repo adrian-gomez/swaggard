@@ -25,6 +25,10 @@ module Swaggard
       def get_tags(yard_object)
         tags = yard_object.tags.select { |tag| tag.tag_name == 'tag' }
 
+        if tags.empty? && !Swaggard.configuration.ignore_untagged_controllers
+          tags << nil
+        end
+
         tags.map { |tag| Swagger::Tag.new(yard_object, tag) }
       end
     end
