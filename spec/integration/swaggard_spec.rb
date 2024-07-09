@@ -12,6 +12,7 @@ describe Swaggard, '.get_doc' do
     Swaggard.configure do |config|
       config.controllers_path = controller_path
       config.routes = Dummy::Application.routes.routes
+      config.ignore_untagged_controllers = false
     end
 
     swagger_json = JSON.dump(Swaggard.get_doc(host))

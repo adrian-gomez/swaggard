@@ -21,7 +21,7 @@ module Swaggard
                 :language, :additional_parameters, :schemes, :ignore_undocumented_paths,
                 :license_name, :exclude_base_path_from_paths, :default_response_description,
                 :default_response_status_code, :excluded_paths, :path_parameter_description,
-                :ignore_put_if_patch_exists
+                :ignore_put_if_patch_exists, :ignore_untagged_controllers
 
     def swagger_version
       @swagger_version ||= '2.0'
@@ -117,6 +117,12 @@ module Swaggard
       @ignore_undocumented_paths = false
     end
 
+    def ignore_untagged_controllers
+      return @ignore_untagged_controllers unless @ignore_untagged_controllers.nil?
+
+      @ignore_untagged_controllers = true
+    end
+
     def exclude_base_path_from_paths
       return @exclude_base_path_from_paths unless @exclude_base_path_from_paths.nil?
 
@@ -163,6 +169,22 @@ module Swaggard
       return @ignore_put_if_patch_exists unless @ignore_put_if_patch_exists.nil?
 
       @ignore_put_if_patch_exists = false
+    end
+
+    def security_definitions
+      @security_definitions ||= {}
+    end
+
+    def security
+      @security ||= {}
+    end
+
+    def add_security_definition(authentication_key, definition)
+      security_definitions[authentication_key] = definition
+    end
+
+    def add_security(authentication_key, scopes = [])
+      security[authentication_key] = scopes
     end
   end
 end
