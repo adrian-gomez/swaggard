@@ -33,5 +33,27 @@ module Swaggard
       Swaggard.register_custom_yard_tags!
     end
 
+    initializer "swaggard.assets.precompile", after: 'assets.precompile' do |app|
+      next unless app.config.respond_to?(:assets)
+
+      app.config.assets.precompile += %w(
+        swaggard/application.css
+        swaggard/application.js
+        swaggard/lang/ca.js
+        swaggard/lang/el.js
+        swaggard/lang/en.js
+        swaggard/lang/es.js
+        swaggard/lang/fr.js
+        swaggard/lang/geo.js
+        swaggard/lang/it.js
+        swaggard/lang/ja.js
+        swaggard/lang/ko-kr.js
+        swaggard/lang/pl.js
+        swaggard/lang/pt.js
+        swaggard/lang/ru.js
+        swaggard/lang/tr.js
+        swaggard/lang/zh-cn.js
+      )
+    end
   end
 end

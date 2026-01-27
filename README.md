@@ -11,6 +11,7 @@ the supported rails version.
 
 Swaggard Version | Swagger UI Version  | Supported Rails Versions
 ---------------- | ------------------- | ------------------------
+2.0.x            | 2.2.8               | 7 - 8
 1.1.x            | 2.2.8               | 4 - 6
 1.0.x            | 2.2.8               | 4 - 5
 0.5.x            | 2.2.8               | 4 - 5
@@ -154,7 +155,7 @@ Will generate
 
 ### Controllers
 
-- `@tag name` This is used to indicate under what `name` tag this controller needs to be grouped. If not provided and Con.ignore_untagged_controllers = true it will use the full controller class name.
+- `@tag name` This is used to indicate under what `name` tag this controller needs to be grouped. If not provided and `!ignore_untagged_controllers` it will use the full controller class name.
 - `@query_parameter [type] name` This is used to indicate that your action receives the `name` parameter of `type` on the query string.
 - `@body_parameter [type] name` This is used to indicate that your action receives the `name` parameter of `type` on the body.
 - `@response_class type` This is used to indicate that your action returns a response of `type`.

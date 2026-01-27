@@ -41,7 +41,7 @@ module Swaggard
       end
 
       def route_path(route)
-        path = route.path.spec.to_s
+        path = route.path.spec.to_s.dup
 
         path.gsub!('(.:format)', '')
         route.required_parts.each { |part| path.gsub!(":#{part}", "{#{part}}") }

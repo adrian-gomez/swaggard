@@ -176,7 +176,7 @@ module Swaggard
     end
 
     def security
-      @security ||= {}
+      @security ||= []
     end
 
     def add_security_definition(authentication_key, definition)
@@ -184,7 +184,7 @@ module Swaggard
     end
 
     def add_security(authentication_key, scopes = [])
-      security[authentication_key] = scopes
+      security << { authentication_key => scopes }
     end
   end
 end
