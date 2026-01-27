@@ -68,7 +68,7 @@ module Swaggard
 
       return {} if security_definitions.empty? && Swaggard.configuration.security.empty?
 
-      Swaggard.configuration.security.keys.each do |authentication_type|
+      Swaggard.configuration.security.flat_map(&:keys).each do |authentication_type|
         next if security_definitions.key?(authentication_type)
 
         warn "#{authentication_type} not supported by securityDefinitions"

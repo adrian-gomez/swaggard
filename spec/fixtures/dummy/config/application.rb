@@ -1,4 +1,5 @@
 require 'action_controller/railtie'
+require 'sprockets/railtie'
 
 # Load Swaggard
 require File.expand_path('../../../../../lib/swaggard', __FILE__)

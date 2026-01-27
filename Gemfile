@@ -7,8 +7,12 @@ rails_version = case ENV['RAILS_MAJOR_VERSION']
                   '~> 4.0'
                 when '5'
                   '~> 5.0'
-                else
+                when '6'
                   '~> 6.0'
+                when '7'
+                  '~> 7.0'
+                else
+                  '~> 8.0'
                 end
 
 gem 'rails', rails_version

@@ -1,5 +1,7 @@
 log/*.log
 *.gem
 
+spec/fixtures/dummy/log/*.log
+
 coverage
 Gemfile.lock
