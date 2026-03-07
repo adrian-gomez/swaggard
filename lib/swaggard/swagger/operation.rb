@@ -14,14 +14,13 @@ module Swaggard
                     :error_responses, :tag
 
       def initialize(yard_object, tag, path, verb, path_params)
-        @name = yard_object.name
+        @name = yard_object.name.to_s
         @tag = tag
         @summary = (yard_object.docstring.lines.first || '').chomp
         @parameters  = []
         @responses = []
 
         @description = (yard_object.docstring.lines[1..-1] || []).map(&:chomp).reject(&:empty?).compact.join("\n")
-        @formats = Swaggard.configuration.api_formats
         @http_method = verb
         @path = path
 
@@ -78,17 +77,26 @@ module Swaggard
       end
 
       def to_doc
-        {
-          'tags'           => [@tag.name],
-          'operationId'    => @operation_id || @name,
-          'summary'        => @summary,
-          'description'    => @description,
-          'produces'       => @formats.map { |format| "application/#{format}" },
-        }.tap do |doc|
-          doc['consumes'] = @formats.map { |format| "application/#{format}" } if @body_parameter
-          doc['parameters'] = @parameters.map(&:to_doc)
-          doc['responses'] = Hash[@responses.map { |response| [response.status_code, response.to_doc] }]
+        regular_params = @parameters.reject { |p| p.is_a?(Parameters::Body) || p.is_a?(Parameters::Form) }
+        body_param = @parameters.find { |p| p.is_a?(Parameters::Body) }
+        form_params = @parameters.select { |p| p.is_a?(Parameters::Form) }
+
+        doc = {
+          'tags'        => [@tag.name],
+          'operationId' => @operation_id || @name,
+          'summary'     => @summary,
+          'description' => @description,
+          'parameters'  => regular_params.map(&:to_doc),
+          'responses'   => Hash[@responses.map { |response| [response.status_code, response.to_doc] }]
+        }
+
+        if body_param && !body_param.empty?
+          doc['requestBody'] = body_param.to_request_body
+        elsif form_params.any?
+          doc['requestBody'] = build_form_request_body(form_params)
         end
+
+        doc
       end
 
       def definitions
@@ -115,6 +123,18 @@ module Swaggard
         @parameters << @body_parameter
 
         @body_parameter
+      end
+
+      def build_form_request_body(form_params)
+        properties = form_params.each_with_object({}) do |param, props|
+          props[param.name] = param.form_property_doc
+        end
+        required = form_params.select(&:is_required?).map(&:name)
+
+        schema = { 'type' => 'object', 'properties' => properties }
+        schema['required'] = required if required.any?
+
+        { 'content' => { 'application/x-www-form-urlencoded' => { 'schema' => schema } } }
       end
 
       def build_path_parameters(path_params)

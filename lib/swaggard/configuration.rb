@@ -14,7 +14,7 @@ module Swaggard
 
     attr_accessor :controllers_path, :models_paths, :routes
 
-    attr_writer :swagger_version, :api_base_path, :api_version, :api_formats, :title,
+    attr_writer :api_base_path, :api_version, :api_formats, :title,
                 :description, :tos, :contact_email, :contact_name, :contact_url, :host,
                 :authentication_type, :authentication_key, :authentication_value,
                 :access_username, :access_password, :default_content_type, :use_cache,
@@ -22,10 +22,6 @@ module Swaggard
                 :license_name, :exclude_base_path_from_paths, :default_response_description,
                 :default_response_status_code, :excluded_paths, :path_parameter_description,
                 :ignore_put_if_patch_exists, :ignore_untagged_controllers
-
-    def swagger_version
-      @swagger_version ||= '2.0'
-    end
 
     def api_version
       @api_version ||= '0.1'

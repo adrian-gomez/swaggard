@@ -50,13 +50,20 @@ module Swaggard
       def to_doc
         { 'description' => description }.tap do |doc|
           schema = if @response_root.present?
-                     { '$ref' => "#/definitions/#{definition.id}" }
+                     { '$ref' => "#/components/schemas/#{Swaggard.ref_name(definition.id)}" }
                    elsif @response_model.response_class.present?
                      @response_model.to_doc
                    end
 
-          doc.merge!('schema' => schema) if schema
-          doc.merge!('examples' => example_to_doc) if @example
+          if schema || @example
+            media_type_object = {}
+            media_type_object['schema'] = schema if schema
+            media_type_object['example'] = example_to_doc if @example
+            doc['content'] = Swaggard.configuration.api_formats.each_with_object({}) do |format, content|
+              content["application/#{format}"] = media_type_object
+            end
+          end
+
           if @headers.any?
             doc['headers'] = Hash[@headers.map { |header| [header.name, header.to_doc] }]
           end
@@ -64,10 +71,10 @@ module Swaggard
       end
 
       def example_to_doc
-        Swaggard.configuration.api_formats.inject({}) do |examples, format|
-          examples.merge!("application/#{format}" => { '$ref' => @example })
-
-          examples
+        if File.exist?(@example)
+          JSON.parse(File.read(@example))
+        else
+          { '$ref' => @example }
         end
       end
 
@@ -100,7 +107,7 @@ module Swaggard
           if PRIMITIVE_TYPES.include?(@response_class)
             { 'type' => @response_class }
           else
-            { '$ref' => "#/definitions/#@response_class" }
+            { '$ref' => "#/components/schemas/#{Swaggard.ref_name(@response_class)}" }
           end
         end
       end

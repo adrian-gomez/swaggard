@@ -6,8 +6,17 @@ module Swaggard
       class Form < Base
 
         def initialize(string)
-          @in = 'formData'
           parse(string)
+        end
+
+        def is_required?
+          @is_required
+        end
+
+        def form_property_doc
+          doc = { 'type' => @data_type }
+          doc['description'] = @description if @description.present?
+          doc
         end
 
         private

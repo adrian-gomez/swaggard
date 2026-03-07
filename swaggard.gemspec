@@ -17,9 +17,9 @@ Gem::Specification.new do |s|
   s.test_files = Dir['spec/**/*']
 
   s.add_dependency 'rails', '>= 7.0', '< 9.0'
-  s.add_dependency 'sass-rails'
 
   s.add_development_dependency 'rspec'
+  s.add_development_dependency 'json_schemer'
   s.add_development_dependency 'bourne'
   s.add_development_dependency 'simplecov'
 

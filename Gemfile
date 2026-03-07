@@ -21,3 +21,4 @@ gem 'rails', rails_version
 gem 'jquery-rails'
 
 gem 'json-schema'
+gem 'json_schemer'
