@@ -25,15 +25,15 @@ module Swaggard
           @definition.empty?
         end
 
-        def to_doc
-          doc = super
-
-          doc.delete('type')
-          doc.delete('description')
-
-          doc['schema'] = { '$ref' => "#/definitions/#{@definition_id}" }
-
-          doc
+        def to_request_body
+          {
+            'required' => @is_required,
+            'content'  => {
+              'application/json' => {
+                'schema' => { '$ref' => "#/components/schemas/#{Swaggard.ref_name(@definition_id)}" }
+              }
+            }
+          }
         end
 
         def description=(description)

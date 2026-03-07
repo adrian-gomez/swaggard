@@ -11,16 +11,16 @@ module Swaggard
         end
 
         def to_doc
-          {
-            'name'          => @name,
-            'in'            => @in,
-            'required'      => @is_required,
-          }.tap do |doc|
-            doc.merge!(@type.to_doc)
+          schema = @type.to_doc
+          schema['enum'] = @options if @options.any?
 
-            doc.merge!('enum' => @options) if @options.any?
-            doc.merge!('description'   => description)
-          end
+          {
+            'name'        => @name,
+            'in'          => @in,
+            'required'    => @is_required,
+            'description' => description,
+            'schema'      => schema
+          }
         end
 
         private

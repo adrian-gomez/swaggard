@@ -46,9 +46,9 @@ module Swaggard
         if basic_type?
           BASIC_TYPES[@name.downcase].dup
         elsif custom_type?
-          Swaggard.configuration.custom_types[@name].dup
+          { '$ref' => "#/components/schemas/#{Swaggard.ref_name(@name)}" }
         else
-          { '$ref' => "#/definitions/#{name}" }
+          { '$ref' => "#/components/schemas/#{Swaggard.ref_name(name)}" }
         end
       end
     end

@@ -10,7 +10,7 @@ module Swaggard
       def to_doc
         {
           'description' => @description,
-          'type'        => @type,
+          'schema'      => { 'type' => @type },
         }
       end
 

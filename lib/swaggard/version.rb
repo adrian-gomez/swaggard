@@ -1,3 +1,3 @@
 module Swaggard
-  VERSION = '2.0.0'
+  VERSION = '4.0.0'
 end

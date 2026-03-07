@@ -34,25 +34,31 @@ module Swaggard
       license = { 'name'  => Swaggard.configuration.license_name }
       license['url'] = Swaggard.configuration.license_url if Swaggard.configuration.license_url.present?
 
-      {
-        'swagger' => Swaggard.configuration.swagger_version,
-        'info' => {
-          'version'         => Swaggard.configuration.api_version,
-          'title'           => Swaggard.configuration.title,
-          'description'     => Swaggard.configuration.description,
-          'termsOfService'  => Swaggard.configuration.tos,
-          'contact'         => contact,
-          'license'         => license,
-        },
-        'host'        => Swaggard.configuration.host,
-        'basePath'    => Swaggard.configuration.api_base_path,
-        'schemes'     => Swaggard.configuration.schemes,
-        'consumes'    => Swaggard.configuration.api_formats.map { |format| "application/#{format}" },
-        'produces'    => Swaggard.configuration.api_formats.map { |format| "application/#{format}" },
-        'tags'        => @tags.map { |_, tag| tag.to_doc },
-        'paths'       => Hash[@paths.values.map { |path| [format_path(path.path), path.to_doc] }],
-        'definitions' => Hash[@definitions.merge(Swaggard.configuration.definitions).map { |id, definition| [id, definition.to_doc(@definitions)] }]
-      }.merge(security_definitions)
+      config = Swaggard.configuration
+      server_url = "#{config.schemes.first}://#{config.host}#{config.api_base_path}"
+
+      info = {
+        'version'         => config.api_version,
+        'title'           => config.title,
+        'description'     => config.description,
+        'contact'         => contact,
+        'license'         => license,
+      }
+      info['termsOfService'] = config.tos if config.tos.present?
+
+      doc = {
+        'openapi' => '3.1.0',
+        'info'    => info,
+        'servers' => [{ 'url' => server_url }],
+        'tags'    => @tags.map { |_, tag| tag.to_doc },
+        'paths'   => Hash[@paths.values.map { |path| [format_path(path.path), path.to_doc] }],
+      }
+
+      components = build_components
+      doc['components'] = components unless components.empty?
+      doc['security'] = config.security unless config.security.empty?
+
+      doc
     end
 
     private
@@ -63,21 +69,29 @@ module Swaggard
       path.gsub(Swaggard.configuration.api_base_path, '')
     end
 
-    def security_definitions
-      security_definitions = Swaggard.configuration.security_definitions
+    def build_components
+      custom_type_schemas = Swaggard.configuration.custom_types
+        .transform_keys { |k| Swaggard.ref_name(k) }
 
-      return {} if security_definitions.empty? && Swaggard.configuration.security.empty?
+      definition_schemas = Hash[
+        @definitions.merge(Swaggard.configuration.definitions)
+          .map { |id, definition| [Swaggard.ref_name(id), definition.to_doc(@definitions)] }
+      ]
+
+      schemas = custom_type_schemas.merge(definition_schemas)
+
+      security_schemes = Swaggard.configuration.security_definitions
 
       Swaggard.configuration.security.flat_map(&:keys).each do |authentication_type|
-        next if security_definitions.key?(authentication_type)
+        next if security_schemes.key?(authentication_type)
 
-        warn "#{authentication_type} not supported by securityDefinitions"
+        warn "#{authentication_type} not supported by components/securitySchemes"
       end
 
-      {
-        'securityDefinitions' => security_definitions,
-        'security' => Swaggard.configuration.security,
-      }
+      result = {}
+      result['schemas'] = schemas unless schemas.empty?
+      result['securitySchemes'] = security_schemes unless security_schemes.empty?
+      result
     end
   end
 end

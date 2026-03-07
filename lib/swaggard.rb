@@ -41,12 +41,20 @@ module Swaggard
       ::YARD::Tags::Library.define_tag('Ignore inherited attributes', :ignore_inherited)
     end
 
+    # Sanitize a name for use as an OpenAPI component key and $ref fragment.
+    # Keys must match ^[a-zA-Z0-9\.\-_]+$ per the OAS 3.1 spec.
+    def ref_name(name)
+      name.to_s.gsub('::', '.').gsub('#', '_')
+    end
+
     def get_doc(host = nil)
       load!
 
       doc = @api.to_doc
 
-      doc['host'] = host if doc['host'].blank? && host
+      if host && configuration.host.blank?
+        doc['servers'] = [{ 'url' => "#{configuration.schemes.first}://#{host}#{configuration.api_base_path}" }]
+      end
 
       doc
     end

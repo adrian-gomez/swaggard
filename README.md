@@ -1,25 +1,23 @@
 # Swaggard
 
-Swaggard is a Rails Engine that can be used to document a REST api. It does this by generating a json that is compliant with [Swagger](http://swagger.io) and displaying it using [Swagger-ui](https://github.com/wordnik/swagger-ui).
+Swaggard is a Rails Engine that documents a REST API by generating a JSON file compliant with [OpenAPI 3.1](https://spec.openapis.org/oas/v3.1.0) and displaying it using [Swagger UI 5](https://github.com/swagger-api/swagger-ui).
 This gem is inspired and based on [SwaggerYard](https://github.com/synctv/swagger_yard) by [Chris Trinh](https://github.com/chtrinh).
 
 
 ## Compatibility
 
-This table tracks the version of Swagger UI used on each Swaggard version and
-the supported rails version.
-
-Swaggard Version | Swagger UI Version  | Supported Rails Versions
----------------- | ------------------- | ------------------------
-2.0.x            | 2.2.8               | 7 - 8
-1.1.x            | 2.2.8               | 4 - 6
-1.0.x            | 2.2.8               | 4 - 5
-0.5.x            | 2.2.8               | 4 - 5
-0.4.x            | 2.2.8               | 4
-0.3.x            | 2.1.3               | 4
-0.2.x            | 2.1.3               | 4
-0.1.x            | 2.1.3               | 4
-0.0.x            | 2.1.8-M1            | 4
+Swaggard Version | OpenAPI Version | Swagger UI Version  | Supported Rails Versions
+---------------- | --------------- | ------------------- | ------------------------
+4.0.x            | 3.1             | 5.32.0              | 7 - 8
+2.0.x            | 2.0             | 2.2.8               | 7 - 8
+1.1.x            | 2.0             | 2.2.8               | 4 - 6
+1.0.x            | 2.0             | 2.2.8               | 4 - 5
+0.5.x            | 2.0             | 2.2.8               | 4 - 5
+0.4.x            | 2.0             | 2.2.8               | 4
+0.3.x            | 2.0             | 2.1.3               | 4
+0.2.x            | 2.0             | 2.1.3               | 4
+0.1.x            | 2.0             | 2.1.3               | 4
+0.0.x            | 2.0             | 2.1.8-M1            | 4
 
 
 ## Installation
@@ -32,47 +30,35 @@ Install the gem with Bundler:
 
     bundle install
 
+
 ## Getting Started
 
-First generate a Swaggard configuration initializer file.
+Generate a Swaggard configuration initializer:
 
     rails g swaggard:install
 
-This will install the file `swaggard.rb` to your Rails `config/initializers` directory which you can then alter the config.
+This installs `config/initializers/swaggard.rb` which you can edit to configure the gem.
 
-Mount your engine
+Mount the engine:
 
-	# config/routes.rb
+    # config/routes.rb
+    mount Swaggard::Engine, at: '/api_docs/swagger/'
 
-	mount Swaggard::Engine, at: '/api_docs/swagger/'
+Access the documentation UI:
 
-Make sure the asset pipeline is enabled by either requiring all railties
-or just the sprockets one:
+    open http://localhost:3000/api_docs/swagger/
 
-    # config/application.rb
+Access the raw OpenAPI JSON:
 
-    require 'sprockets/railtie'
-
-Access your service documentation
-
-	open http://localhost:3000/api_docs/swagger/
-
-
-Access the raw swagger json
-
-	open http://localhost:3000/api_docs/swagger.json
+    open http://localhost:3000/api_docs/swagger.json
 
 
 ## Example
 
 By just using Swaggard you'll get documentation for the endpoints that exist on your service:
-http method, path, path params. And grouping will be done based on the controller that holds
-each path.
+HTTP method, path, and path parameters. Grouping is done based on the controller that holds each path.
 
-This is fine base but you should add more documentation in order to provide more information
-of the expected inputs and outputs or even change the grouping of the endpoints.
-
-Here is a example of how to use Swaggard
+Add YARD comments to provide richer documentation:
 
     # config/routes.rb
 
@@ -146,40 +132,43 @@ Here is a example of how to use Swaggard
 
     end
 
-Will generate
 
-![Web UI](https://raw.githubusercontent.com/Moove-it/swaggard/master/example/web-ui.png)
-
-
-## Available tags
+## Available Tags
 
 ### Controllers
 
-- `@tag name` This is used to indicate under what `name` tag this controller needs to be grouped. If not provided and `!ignore_untagged_controllers` it will use the full controller class name.
-- `@query_parameter [type] name` This is used to indicate that your action receives the `name` parameter of `type` on the query string.
-- `@body_parameter [type] name` This is used to indicate that your action receives the `name` parameter of `type` on the body.
-- `@response_class type` This is used to indicate that your action returns a response of `type`.
-- `@response_status 200` This is used to indicate the response code of your action when everything goes well.
-- `@response_root name` This is used to indicate that your action returns its response inside a root key element `name`. If not provided the root is omitted and the response its returned directly.
-- `@form_parameter`
-- `@parameter_list`
+- `@tag name` — Group this controller under `name`. Defaults to the controller path if `ignore_untagged_controllers` is false.
+- `@query_parameter [type] name` — Query string parameter.
+- `@body_parameter [type] name` — Request body property. Generates a `requestBody` in the OpenAPI output.
+- `@form_parameter [type] name` — Form data parameter (`application/x-www-form-urlencoded`).
+- `@parameter_list` — Enum-style query parameter list.
+- `@response_class type` — Response schema type. Supports `Array<Type>` for array responses.
+- `@response_status 200` — HTTP response status code.
+- `@response_root name` — Wrap the response in a root key.
+- `@response_description text` — Description for the response.
+- `@response_example path/to/example.json` — Example response. Inlined if the file exists on disk, otherwise used as an `externalValue` URI.
+- `@response_header [type] name description` — Response header.
+- `@operation_id id` — Override the `operationId`.
+- `@body_required` — Mark the request body as required.
+- `@body_title title` — Title for the generated request body schema.
+- `@body_definition SchemaName` — Reference an existing schema by name as the request body.
 
-If you want to generate documentation for all controllers even for those that don't have a tag do:
-    # config/initializers/swaggard.rb
+To document all controllers including those without a `@tag`:
+
     Swaggard.configure do |config|
-      ...
       config.ignore_untagged_controllers = false
-      ...
     end
 
 
 ### Models
 
-- `@attr [type] name` This is used to indicate that your models has an attribute `name` of `type`.
+- `@attr [type] name` — Model attribute.
+- `@ignore_inherited` — Do not inherit properties from parent class.
+
 
 ## Primitives
 
-When one of these types is given Swaggard will handle them directly instead of searching for a definition:
+When one of these types is used Swaggard maps it to an inline schema instead of a `$ref`:
 
 - integer
 - long
@@ -195,128 +184,92 @@ When one of these types is given Swaggard will handle them directly instead of s
 - hash
 
 
+## Custom Types
+
+Define reusable object schemas that are placed in `components/schemas` and referenced via `$ref`:
+
+    Swaggard.configure do |config|
+      config.add_custom_type('Address', type: :object,
+        properties: {
+          line1: { type: :string },
+          city:  { type: :string },
+          state: { type: :string },
+          zip:   { type: :string },
+        },
+        required: %i[line1 city state zip])
+    end
+
+
 ## Authentication
 
-Swaggard supports two types of authentication: header and query.
+Swaggard supports injecting auth credentials into every request via `requestInterceptor`.
 
-You can configure it as follows:
-
-    # config/initializers/swaggard.rb
     Swaggard.configure do |config|
-      config.authentication_type  = 'header' # Defaults to 'query'
+      config.authentication_type  = 'header' # or 'query'. Defaults to 'query'
       config.authentication_key   = 'X-AUTH-TOKEN' # Defaults to 'api_key'
-      config.authentication_value = 'your-secret-key' # Initial value for authentication. Defaults to ''
+      config.authentication_value = 'your-secret-key' # Defaults to ''
     end
 
-Even if you provide a authentication_value you can later change it from the ui.
+For OAuth2 / API key schemes visible in the Swagger UI Authorize dialog, use `add_security_definition` and `add_security`:
 
-
-## Access authorization
-
-Swaggard supports access authorization.
-
-You can configure it as follows:
-
-    # config/initializers/swaggard.rb
     Swaggard.configure do |config|
-      config.access_username  = 'admin'
-      config.access_password   = 'password'
+      config.add_security_definition('api_key', type: 'apiKey', name: 'Authorization', in: 'header')
+      config.add_security('api_key')
     end
 
-If you not set `access_username`, everyone will have access to Swagger documentation.
 
+## Access Authorization
 
-## Additional parameters
+Protect the documentation UI with HTTP Basic auth:
 
-Swaggard supports additional parameters to be sent on every request, either as a header or as part of the query.
-
-You can configure it as follows:
-
-    # config/initializers/swaggard.rb
     Swaggard.configure do |config|
-      config.additional_parameters = [{ key: 'TOKEN', type: 'header', value: '234' }]
+      config.access_username = 'admin'
+      config.access_password = 'password'
     end
 
-type can be 'header' or 'query'.
-If value is provided then it will be used as a default.
-You can change/set the value for the parameters in the ui.
+If `access_username` is not set, the UI is publicly accessible.
 
 
-## Default content type
+## Additional Parameters
 
-You can set default content type in Swaggard configuration as follows:
+Inject extra headers or query parameters into every request:
 
-    # config/initializers/swaggard.rb
     Swaggard.configure do |config|
-      config.default_content_type = 'application/json'
+      config.additional_parameters = [{ key: 'STORE-CODE', type: 'header', value: '1' }]
     end
 
-If you set `default_content_type`, Swagger will use it in example request.
-
-
-## Language
-
-You can set the language for SwaggerUI as follows:
-
-    # config/initializers/swaggard.rb
-    Swaggard.configure do |config|
-      config.language = 'es'
-    end
-
-The default value is: 'en'.
-Supported values are:
-- ca
-- el
-- en
-- es
-- fr
-- geo
-- it
-- ja
-- ko-kr
-- pl
-- pt
-- ru
-- tr
-- zh-cn
+`type` can be `'header'` or `'query'`.
 
 
 ## Caching
 
-You can improve Swagger performance by using caching. You can enable `use_cache` in Swaggard configuration as follows:
+Cache the generated OpenAPI JSON for better performance:
 
-    # config/initializers/swaggard.rb
     Swaggard.configure do |config|
       config.use_cache = Rails.env.production?
     end
 
-If you set `use_cache` as `Rails.env.production?`, Swagger will use cache only in production mode.
+Clear the cache with:
 
-Note. For cache clearing you can execute `rake swaggard:clear_cache`.
+    rake swaggard:clear_cache
 
 
 ## Documentation Scoping
 
-Its possible to only generate Swagger documentation for a subset of your application controllers
-to do this you just need to use the `controllers_path` config option.
-For instance to only generate documentation for the controllers under `app/controllers/api` you
-need do this:
+Limit documentation to a subset of controllers:
 
-    # config/initializers/swaggard.rb
     Swaggard.configure do |config|
-      ...
       config.controllers_path = "#{Rails.root}/app/controllers/api/**/*.rb"
-      ...
     end
 
-The default value for `controllers_path` is `"#{Rails.root}/app/controllers/**/*.rb"`.
+Default: `"#{Rails.root}/app/controllers/**/*.rb"`.
 
 
 ## More Information
 
-- [Swagger](http://swagger.io)
-- [Swagger-ui](https://github.com/wordnik/swagger-ui)
-- [Yard](https://github.com/lsegal/yard)
+- [OpenAPI 3.1 Specification](https://spec.openapis.org/oas/v3.1.0)
+- [Swagger UI](https://github.com/swagger-api/swagger-ui)
+- [YARD](https://github.com/lsegal/yard)
 
 
 ## Author
@@ -326,5 +279,4 @@ The default value for `controllers_path` is `"#{Rails.root}/app/controllers/**/*
 
 ## Credits
 
-[Chris Trinh](https://github.com/chtrinh) author of [SwaggerYard](https://github.com/synctv/swagger_yard) in which this gem is
-inspired and used a base.
+[Chris Trinh](https://github.com/chtrinh) — author of [SwaggerYard](https://github.com/synctv/swagger_yard), which this gem is inspired by and based on.

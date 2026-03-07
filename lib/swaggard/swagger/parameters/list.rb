@@ -11,14 +11,12 @@ module Swaggard
 
         def to_doc
           doc = super
-
-          doc.merge(
-            {
-              'type'            => 'array',
-              'items'           => { 'type' => @data_type },
-              'enum'            => @list_values
-            }
-          )
+          doc['schema'] = {
+            'type'  => 'array',
+            'items' => { 'type' => @data_type },
+            'enum'  => @list_values
+          }
+          doc
         end
 
         private
