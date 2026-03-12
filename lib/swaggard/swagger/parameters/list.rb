@@ -13,8 +13,7 @@ module Swaggard
           doc = super
           doc['schema'] = {
             'type'  => 'array',
-            'items' => { 'type' => @data_type },
-            'enum'  => @list_values
+            'items' => { 'type' => @data_type, 'enum'  => @list_values },
           }
           doc
         end

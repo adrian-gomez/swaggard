@@ -9,6 +9,7 @@ class PetsController < ApplicationController
   # return a Pet
   #
   # @query_parameter [Integer] id The ID for the Pet
+  # @query_parameter [Array<String>] status! [available, pending, sold] The status of the Pet
   def show
   end
 

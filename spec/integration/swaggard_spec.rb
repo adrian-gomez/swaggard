@@ -15,7 +15,7 @@ describe Swaggard, '.get_doc' do
       config.ignore_untagged_controllers = false
     end
 
-    swagger_json = JSON.dump(Swaggard.get_doc(host))
+    swagger_json = JSON.pretty_generate(Swaggard.get_doc(host))
 
     expect(swagger_json).to eq(api_json)
   end

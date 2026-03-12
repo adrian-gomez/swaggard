@@ -64,7 +64,11 @@ module Swaggard
           def to_doc
             result = @type.to_doc
             result['description'] = @description if @description
-            result['enum'] = @options if @options.present?
+            if @options.present? && @type.is_array?
+              result['items']['enum'] = @options
+            elsif @options.present?
+              result['enum'] = @options
+            end
             result
           end
 
@@ -74,7 +78,6 @@ module Swaggard
           def parse(string)
             string.gsub!("\n", ' ')
             data_type, required, name, options_and_description = string.match(/\A\[(\S*)\](!)?\s*([\w\[\]]*)\s*(.*)\Z/).captures
-            allow_multiple = name.gsub!('[]', '')
             options, description = options_and_description.match(/\A(\[.*\])?(.*)\Z/).captures
             options = options ? options.gsub(/\[?\]?\s?/, '').split(',') : []
 

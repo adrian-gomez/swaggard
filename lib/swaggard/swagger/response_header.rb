@@ -21,7 +21,6 @@ module Swaggard
       # Example: [Integer]   media[media_type_id]                          ID of the desired media type.
       def parse(string)
         data_type, name, options_and_description = string.match(/\A\[(\S*)\]\s*([\w\-\[\]]*)\s*(.*)\Z/).captures
-        allow_multiple = name.gsub!('[]', '')
 
         options, description = options_and_description.match(/\A(\[.*\])?(.*)\Z/).captures
         options = options ? options.gsub(/\[?\]?\s?/, '').split(',') : []
@@ -29,7 +28,6 @@ module Swaggard
         @name = name
         @description = description
         @type = data_type
-        @allow_multiple = allow_multiple.present?
         @options = options
       end
     end

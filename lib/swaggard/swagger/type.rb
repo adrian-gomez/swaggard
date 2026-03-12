@@ -24,6 +24,10 @@ module Swaggard
         @is_array = is_array
       end
 
+      def is_array?
+        @is_array
+      end
+
       def to_doc
         if @is_array
           { 'type' => 'array', 'items' => type_tag_and_name }
