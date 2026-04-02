@@ -13,4 +13,11 @@ class PetsController < ApplicationController
   def show
   end
 
+  # create a new Pet
+  #
+  # @body_required
+  # @body_definition PetBody
+  def create
+  end
+
 end

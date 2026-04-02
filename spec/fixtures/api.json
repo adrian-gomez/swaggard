@@ -57,6 +57,30 @@
             "description": "successful operation"
           }
         }
+      },
+      "post": {
+        "tags": [
+          "pets"
+        ],
+        "operationId": "create",
+        "summary": "create a new Pet",
+        "description": "",
+        "parameters": [],
+        "responses": {
+          "default": {
+            "description": "successful operation"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PetBody"
+              }
+            }
+          }
+        }
       }
     },
     "/pets/{id}": {
@@ -105,6 +129,28 @@
             "description": "successful operation"
           }
         }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "PetBody": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The name of the Pet"
+          },
+          "age": {
+            "type": "integer",
+            "format": "int32",
+            "description": "The age of the Pet"
+          }
+        }
+      },
+      "PetsController.create_body": {
+        "type": "object",
+        "properties": {}
       }
     }
   }
