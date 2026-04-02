@@ -22,7 +22,7 @@ module Swaggard
         end
 
         def empty?
-          @definition.empty?
+          @definition.empty? && @definition_id == @definition.id
         end
 
         def to_request_body
