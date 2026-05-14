@@ -30,6 +30,7 @@ module Swaggard
       ::YARD::Tags::Library.define_tag('Body description', :body_description)
       ::YARD::Tags::Library.define_tag('Body title', :body_title)
       ::YARD::Tags::Library.define_tag('Body definition', :body_definition)
+      ::YARD::Tags::Library.define_tag('Body content type', :body_content_type)
       ::YARD::Tags::Library.define_tag('Body parameter', :body_parameter)
       ::YARD::Tags::Library.define_tag('Parameter list', :parameter_list)
       ::YARD::Tags::Library.define_tag('Response class', :response_class)
