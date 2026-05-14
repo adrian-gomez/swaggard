@@ -44,6 +44,8 @@ module Swaggard
             body_parameter.title = value
           when 'body_definition'
             body_parameter.definition = value
+          when 'body_content_type'
+            body_parameter.content_type = value
           when 'body_parameter'
             body_parameter.add_property(value)
           when 'parameter_list'

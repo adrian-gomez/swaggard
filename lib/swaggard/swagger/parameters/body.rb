@@ -7,11 +7,14 @@ module Swaggard
       class Body < Base
         attr_reader :definition
 
+        attr_writer :content_type
+
         def initialize(operation_name)
           @in             = 'body'
           @name           = 'body'
           @is_required    = false
           @description    = ''
+          @content_type   = 'application/json'
           @definition     = Definition.new("#{operation_name}_body")
           @definition_id  = @definition.id
         end
@@ -29,7 +32,7 @@ module Swaggard
           {
             'required' => @is_required,
             'content'  => {
-              'application/json' => {
+              @content_type => {
                 'schema' => { '$ref' => "#/components/schemas/#{Swaggard.ref_name(@definition_id)}" }
               }
             }
