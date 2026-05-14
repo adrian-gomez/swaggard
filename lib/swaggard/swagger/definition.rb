@@ -5,13 +5,14 @@ module Swaggard
       attr_reader :id
       attr_writer :description, :title, :ignore_inherited
 
-      def initialize(id, ancestors: [])
+      def initialize(id, ancestors: [], collection: false)
         @id = id
         @title = ''
         @properties = []
         @description = ''
         @ancestors = ancestors
         @ignore_inherited = false
+        @collection = collection
       end
 
       def add_property(property)
@@ -41,19 +42,31 @@ module Swaggard
       end
 
       def to_doc(definitions)
-        {}.tap do |doc|
-          doc['title'] = @title if @title.present?
-          doc['type']  = 'object'
+        all_properties = properties(definitions)
+        properties_hash = Hash[all_properties.map { |property| [property.id, property.to_doc] }]
+        required_properties = all_properties.select(&:required?).map(&:id)
 
-          doc['description'] = @description if @description.present?
+        if @collection
+          items = { 'type' => 'object', 'properties' => properties_hash }
+          items['required'] = required_properties if required_properties.any?
 
-          all_properties = properties(definitions)
+          {}.tap do |doc|
+            doc['title'] = @title if @title.present?
+            doc['type'] = 'array'
+            doc['description'] = @description if @description.present?
+            doc['items'] = items
+          end
+        else
+          {}.tap do |doc|
+            doc['title'] = @title if @title.present?
+            doc['type']  = 'object'
 
-          doc['properties'] =  Hash[all_properties.map { |property| [property.id, property.to_doc] }]
-          required_properties = all_properties.select(&:required?).map(&:id)
-          doc['required'] = required_properties if required_properties.any?
+            doc['description'] = @description if @description.present?
+
+            doc['properties'] = properties_hash
+            doc['required'] = required_properties if required_properties.any?
+          end
         end
-
       end
 
     end
