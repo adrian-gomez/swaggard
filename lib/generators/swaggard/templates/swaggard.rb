@@ -75,7 +75,7 @@ Swaggard.configure do |config|
   # config.license_url = ""
 
   # Specify one or more paths to look for your model documentation
-  # config.models_paths = ["#{app.root}/app/serializers/**/*.rb"]
+  # config.models_paths = ["#{Rails.root}/app/serializers/**/*.rb"]
 
   # The transfer protocol of the API.
   # Values MUST be from the list: "http", "https", "ws", "wss"
