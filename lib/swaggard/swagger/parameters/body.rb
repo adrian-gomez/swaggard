@@ -72,15 +72,17 @@ module Swaggard
             elsif @options.present?
               result['enum'] = @options
             end
+            result['deprecated'] = true if @deprecated
             result
           end
 
           # Example: [Array]     status            Filter by status. (e.g. status[]=1&status[]=2&status[]=3)
           # Example: [Array]     status(required)  Filter by status. (e.g. status[]=1&status[]=2&status[]=3)
           # Example: [Integer]   media[media_type_id]                          ID of the desired media type.
+          # Example: [Boolean]   uses_tobacco(deprecated)  Whether the patient uses tobacco.
           def parse(string)
             string.gsub!("\n", ' ')
-            data_type, required, name, options_and_description = string.match(/\A\[(\S*)\](!)?\s*([\w\[\]]*)\s*(.*)\Z/).captures
+            data_type, required, name, deprecated, options_and_description = string.match(/\A\[(\S*)\](!)?\s*([\w\[\]]*)(\(deprecated\))?\s*(.*)\Z/).captures
             options, description = options_and_description.match(/\A(\[.*\])?(.*)\Z/).captures
             options = options ? options.gsub(/\[?\]?\s?/, '').split(',') : []
 
@@ -89,6 +91,7 @@ module Swaggard
             @type = Parsers::Type.run(data_type)
             @required = required
             @options = options
+            @deprecated = deprecated.present?
           end
         end
       end

@@ -139,7 +139,7 @@ Add YARD comments to provide richer documentation:
 
 - `@tag name` — Group this controller under `name`. Defaults to the controller path if `ignore_untagged_controllers` is false.
 - `@query_parameter [type] name` — Query string parameter.
-- `@body_parameter [type] name` — Request body property. Generates a `requestBody` in the OpenAPI output.
+- `@body_parameter [type] name` — Request body property. Generates a `requestBody` in the OpenAPI output. Use `[type]!` to mark the property as required and `name(deprecated)` to mark it as deprecated.
 - `@form_parameter [type] name` — Form data parameter (`application/x-www-form-urlencoded`).
 - `@parameter_list` — Enum-style query parameter list.
 - `@response_class type` — Response schema type. Supports `Array<Type>` for array responses.
@@ -162,7 +162,7 @@ To document all controllers including those without a `@tag`:
 
 ### Models
 
-- `@attr [type] name` — Model attribute.
+- `@attr [type] name` — Model attribute. Use `!name` to mark the attribute as required and `name(deprecated)` to mark it as deprecated.
 - `@ignore_inherited` — Do not inherit properties from parent class.
 
 
