@@ -11,10 +11,11 @@ module Swaggard
         options, description = options_and_description.match(/\A(\[.*\])?(.*)\Z/).captures
         options = options ? options.gsub(/\[?\]?\s?/, '').split(',') : []
         description = description.strip
+        deprecated = name.gsub!(/\(deprecated\)\z/, '')
         required = name.gsub!(/^!/, '')
         type = Parsers::Type.run(yard_object.types.first)
 
-        Swaggard::Swagger::Property.new(name, type, description, required.present?, options)
+        Swaggard::Swagger::Property.new(name, type, description, required.present?, options, deprecated.present?)
       end
     end
   end
