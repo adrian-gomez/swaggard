@@ -66,7 +66,9 @@ module Swaggard
     def format_path(path)
       return path unless Swaggard.configuration.exclude_base_path_from_paths
 
-      path.gsub(Swaggard.configuration.api_base_path, '')
+      base_path = Swaggard.configuration.api_base_path
+
+      path.sub(/\A#{Regexp.escape(base_path)}/, '')
     end
 
     def build_components
