@@ -19,6 +19,7 @@ module Swaggard
         @summary = (yard_object.docstring.lines.first || '').chomp
         @parameters  = []
         @responses = []
+        @deprecated = false
 
         @description = (yard_object.docstring.lines[1..-1] || []).map(&:chomp).reject(&:empty?).compact.join("\n")
         @http_method = verb
@@ -32,6 +33,8 @@ module Swaggard
           case yard_tag.tag_name
           when 'operation_id'
             @operation_id = "#{@tag.name}.#{value}"
+          when 'deprecated'
+            @deprecated = true
           when 'query_parameter'
             @parameters << Parameters::Query.new(value)
           when 'form_parameter'
@@ -97,6 +100,8 @@ module Swaggard
         elsif form_params.any?
           doc['requestBody'] = build_form_request_body(form_params)
         end
+
+        doc['deprecated'] = true if @deprecated
 
         doc
       end

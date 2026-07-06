@@ -80,7 +80,8 @@
               }
             }
           }
-        }
+        },
+        "deprecated": true
       }
     },
     "/pets/{id}": {
