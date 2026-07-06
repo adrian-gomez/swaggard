@@ -24,6 +24,7 @@ module Swaggard
     def register_custom_yard_tags!
       ::YARD::Tags::Library.define_tag('Controller\'s tag', :tag)
       ::YARD::Tags::Library.define_tag('Operation id', :operation_id)
+      ::YARD::Tags::Library.define_tag('Deprecated', :deprecated)
       ::YARD::Tags::Library.define_tag('Query parameter', :query_parameter)
       ::YARD::Tags::Library.define_tag('Form parameter', :form_parameter)
       ::YARD::Tags::Library.define_tag('Body required', :body_required)

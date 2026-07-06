@@ -15,6 +15,7 @@ class PetsController < ApplicationController
 
   # create a new Pet
   #
+  # @deprecated
   # @body_required
   # @body_definition PetBody
   def create
