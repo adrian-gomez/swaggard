@@ -15,7 +15,7 @@ module Swaggard
         @name =  tag ? tag.text : "#{@controller_class.controller_path}"
         @name, @route = @name.split(' ')
 
-        @description = yard_object.docstring || ''
+        @description = Swaggard.docstring(yard_object)
       end
 
       def to_doc

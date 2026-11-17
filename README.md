@@ -159,6 +159,14 @@ To document all controllers including those without a `@tag`:
       config.ignore_untagged_controllers = false
     end
 
+To keep RBS inline type annotations (Sorbet or Steep `#:` signatures and their `#|` continuation lines) out of the docs, so an action whose only comment is a signature stays undocumented:
+
+    Swaggard.configure do |config|
+      config.ignore_rbs_comments = true
+    end
+
+This drops every docstring line that starts with `:` or `|`, so a description line written as `# : text` is dropped too.
+
 
 ### Models
 

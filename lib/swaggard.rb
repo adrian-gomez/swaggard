@@ -49,6 +49,17 @@ module Swaggard
       name.to_s.gsub('::', '.').gsub('#', '_')
     end
 
+    RBS_COMMENT_LINE = /\A[:|]/
+
+    # A YARD docstring without the RBS inline type annotations (`#:` signatures
+    # and their `#|` continuation lines) when `ignore_rbs_comments` is enabled.
+    def docstring(yard_object)
+      text = yard_object.docstring.to_s
+      return text unless configuration.ignore_rbs_comments
+
+      text.lines.reject { |line| RBS_COMMENT_LINE.match?(line) }.join.strip
+    end
+
     def get_doc(host = nil)
       load!
 
