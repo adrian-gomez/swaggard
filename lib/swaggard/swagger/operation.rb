@@ -16,12 +16,13 @@ module Swaggard
       def initialize(yard_object, tag, path, verb, path_params)
         @name = yard_object.name.to_s
         @tag = tag
-        @summary = (yard_object.docstring.lines.first || '').chomp
+        docstring = Swaggard.docstring(yard_object)
+        @summary = (docstring.lines.first || '').chomp
         @parameters  = []
         @responses = []
         @deprecated = false
 
-        @description = (yard_object.docstring.lines[1..-1] || []).map(&:chomp).reject(&:empty?).compact.join("\n")
+        @description = (docstring.lines[1..-1] || []).map(&:chomp).reject(&:empty?).compact.join("\n")
         @http_method = verb
         @path = path
 

@@ -21,7 +21,8 @@ module Swaggard
                 :language, :additional_parameters, :schemes, :ignore_undocumented_paths,
                 :license_name, :exclude_base_path_from_paths, :default_response_description,
                 :default_response_status_code, :excluded_paths, :path_parameter_description,
-                :ignore_put_if_patch_exists, :ignore_untagged_controllers
+                :ignore_put_if_patch_exists, :ignore_untagged_controllers,
+                :ignore_rbs_comments
 
     def api_version
       @api_version ||= '0.1'
@@ -117,6 +118,12 @@ module Swaggard
       return @ignore_untagged_controllers unless @ignore_untagged_controllers.nil?
 
       @ignore_untagged_controllers = true
+    end
+
+    def ignore_rbs_comments
+      return @ignore_rbs_comments unless @ignore_rbs_comments.nil?
+
+      @ignore_rbs_comments = false
     end
 
     def exclude_base_path_from_paths
